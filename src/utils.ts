@@ -1,5 +1,6 @@
 import { existsSync, statSync } from 'fs'
 import { ParsedPath, parse } from 'path'
+import { directoryWhitelist, fileWhitelist } from './config'
 import { Config, ConfigOrigin } from './types'
 
 /**
@@ -59,11 +60,22 @@ export function parsePath(path: string): ParsedPath {
  * @param path The path to check.
  * @returns `false` if the final item in the path contains a period (`.`), otherwise `true`.
  * @throws An error if the path is empty.
+ * @throws An error if the final item in the path cannot be determined.
  */
 export function pathEndsWithDir(path: string): boolean {
   if (path.length === 0) throw new Error('Path cannot be empty.')
-  const arrPath = path.split('/')
-  return !arrPath[arrPath.length - 1]?.includes('.')
+  const { ext, name } = parsePath(path)
+
+  // return false if the parsed path has an extension
+  if (ext.length > 0) return false
+
+  if (name.startsWith('.')) {
+    if (directoryWhitelist.includes(name)) return true
+    if (fileWhitelist.includes(name)) return false
+    throw new Error(`Unknown file or directory: ${name}`)
+  }
+
+  return true
 }
 
 /**
