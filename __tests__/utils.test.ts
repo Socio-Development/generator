@@ -1,6 +1,7 @@
 import {
   isConfig,
   isConfigOrigin,
+  isDirectory,
   pathEndsWithDir,
   pathExists,
 } from '../src/utils'
@@ -33,6 +34,22 @@ describe('isConfigOrigin', () => {
     expect(isConfigOrigin('foo')).toBe(false)
     expect(isConfigOrigin('root')).toBe(false)
     expect(isConfigOrigin('project')).toBe(false)
+  })
+})
+
+describe('isDirectory', () => {
+  it('should return true if the path is a directory', () => {
+    expect(isDirectory('src')).toBe(true)
+    expect(isDirectory('src/')).toBe(true)
+  })
+
+  it('should return false if the path is a file', () => {
+    expect(isDirectory('src/index.ts')).toBe(false)
+    expect(isDirectory('.gitignore')).toBe(false)
+  })
+
+  it('should throw an error if the path is empty', () => {
+    expect(() => isDirectory('')).toThrow()
   })
 })
 

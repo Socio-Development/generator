@@ -1,4 +1,4 @@
-import { existsSync } from 'fs'
+import { existsSync, statSync } from 'fs'
 import { Config, ConfigOrigin } from './types'
 
 /**
@@ -24,6 +24,15 @@ export function isConfigOrigin(value: unknown): value is ConfigOrigin {
   return (
     typeof value === 'string' && ['default', 'file', 'function'].includes(value)
   )
+}
+
+/**
+ * Checks if the provided path is a directory.
+ * @param path The path to check.
+ * @returns `true` if the path is a directory, otherwise `false`.
+ */
+export function isDirectory(path: string): boolean {
+  return statSync(path).isDirectory()
 }
 
 /**
