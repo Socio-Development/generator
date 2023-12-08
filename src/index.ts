@@ -1,15 +1,10 @@
-import GeneratorController from './controller'
-import defaultConfig from './defaultConfig'
-import { GeneratorConfig, GeneratorOptions } from './types'
+import { loadConfig } from './loaders'
+import { GeneratorOptions } from './types'
 
-export function defineConfig(config: Partial<GeneratorConfig>): GeneratorConfig {
-  return {
-    ...defaultConfig,
-    ...config
-  }
-}
+export { defineConfig } from './config'
 
 export function generate(options: GeneratorOptions): void {
-  const controller = new GeneratorController(options)
-  controller.write()
+  //const controller = new GeneratorController(options)
+  //controller.write()
+  loadConfig()
 }

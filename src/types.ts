@@ -1,6 +1,13 @@
+export const configOrigins = ['default', 'file', 'function'] as const
 export const supportedLanguages = ['javascript', 'typescript'] as const
 
-export type GeneratorConfig = {
+export interface Config extends UserConfig {
+  origin: ConfigOrigin
+}
+
+export type ConfigOrigin = (typeof configOrigins)[number]
+
+export type UserConfig = {
   /**
    * # Create Directory
    * **Default** `true`

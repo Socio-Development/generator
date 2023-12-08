@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { join, resolve } from 'path'
 import defaultConfig from './defaultConfig'
-import { GeneratorConfig, GeneratorOptions, SupportedLanguage } from './types'
+import { Config, GeneratorOptions, SupportedLanguage } from './types'
 
 export default class GeneratorController {
   /** The code to put in the generated file. */
@@ -11,7 +11,7 @@ export default class GeneratorController {
    * If the root directory contains a `.generaterc` file, it will be loaded.
    * Otherwise, the default config will be used.
    */
-  private _config: GeneratorConfig
+  private _config: Config
   /** Name of the file to generate. */
   private _fileName: string
   /** The code language of the generated file. */
@@ -28,7 +28,7 @@ export default class GeneratorController {
     path
   }: GeneratorOptions) {
     this._code = code
-    this._config = defaultConfig
+    this._config = { ...defaultConfig, origin: 'default' }
     this._fileName = fileName
     this._language = language
     this._relativePath = path
