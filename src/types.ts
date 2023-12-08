@@ -35,31 +35,6 @@ export type UserConfig = {
    *
    * You can change the name of the directory that is created by safe mode.
    * By default, the directory name is `_generated`.
-   *
-   * ## Example
-   * ```ts
-   * // ./scripts/generateIconTypes.ts
-   * import { generate } from '@socio-development/generator';
-   *
-   * function crawlIconAssetsAndExtractNames(): string[] {
-   *   // your code here
-   * }
-   *
-   * const iconNames = crawlIconAssetsAndExtractNames();
-   *
-   * const codeToGenerate = `
-   * export const iconNames = ['${ iconNames.join("', '") }'] as const;
-   *
-   * export type IconName = (typeof iconNames)[number];
-   * `
-   *
-   * generate({
-   *   code: codeToGenerate,
-   *   fileName: 'icons',
-   *   language: 'typescript',
-   *   path: 'src/types'
-   * });
-   * ```
    */
   safetyDirName: string
 }
