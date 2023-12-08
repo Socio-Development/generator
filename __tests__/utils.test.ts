@@ -1,4 +1,9 @@
-import { isConfig, isConfigOrigin } from '../src/utils'
+import {
+  isConfig,
+  isConfigOrigin,
+  pathEndsWithDir,
+  pathExists,
+} from '../src/utils'
 
 describe('isConfig', () => {
   test('should return true for valid configs', () => {
@@ -28,5 +33,37 @@ describe('isConfigOrigin', () => {
     expect(isConfigOrigin('foo')).toBe(false)
     expect(isConfigOrigin('root')).toBe(false)
     expect(isConfigOrigin('project')).toBe(false)
+  })
+})
+
+describe('pathEndsWithDir', () => {
+  test('should return true if the path ends with a directory', () => {
+    expect(pathEndsWithDir('src')).toBe(true)
+    expect(pathEndsWithDir('src/')).toBe(true)
+    expect(pathEndsWithDir('src/foo')).toBe(true)
+    expect(pathEndsWithDir('src/foo/')).toBe(true)
+    expect(pathEndsWithDir('src/foo/bar')).toBe(true)
+    expect(pathEndsWithDir('src/foo/bar/')).toBe(true)
+  })
+
+  test('should return false if the path ends with a file', () => {
+    expect(pathEndsWithDir('src/index.ts')).toBe(false)
+    expect(pathEndsWithDir('src/foo/index.ts')).toBe(false)
+    expect(pathEndsWithDir('src/foo/bar/index.ts')).toBe(false)
+    expect(pathEndsWithDir('src/foo/bar/.gitignore')).toBe(false)
+  })
+})
+
+describe('pathExists', () => {
+  test('should return true if the path exists', () => {
+    expect(pathExists('src')).toBe(true)
+    expect(pathExists('src/index.ts')).toBe(true)
+  })
+
+  test('should return false if the path does not exist', () => {
+    expect(pathExists('foo')).toBe(false)
+    expect(pathExists('foo/bar')).toBe(false)
+    expect(pathExists('foo/bar/baz')).toBe(false)
+    expect(pathExists('foo/bar/baz/index.ts')).toBe(false)
   })
 })
