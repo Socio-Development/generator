@@ -1,7 +1,8 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
+import { mkdirSync, writeFileSync } from 'fs'
 import { join, resolve } from 'path'
 import defaultConfig from './defaultConfig'
 import { Config, GeneratorOptions, SupportedLanguage } from './types'
+import { pathEndsWithDir, pathExists } from './utils'
 
 export default class GeneratorController {
   /** The code to put in the generated file. */
@@ -41,14 +42,14 @@ export default class GeneratorController {
    */
   private _createDir(path: string): void {
     // verify that the path is a directory
-    if (!this._pathEndsWithDir(path)) {
+    if (!pathEndsWithDir(path)) {
       throw new Error(
         `[generator] Invalid directory path: ${path}. This is most likely caused by a bug in the generator.`,
       )
     }
 
     // verify that the path doesn't exist
-    if (this._pathExists(path)) {
+    if (pathExists(path)) {
       throw new Error(
         `[generator] Directory already exists: ${path}. The current process should not have been started and is most likely caused by a bug in the generator.`,
       )
@@ -59,7 +60,7 @@ export default class GeneratorController {
     mkdirSync(path)
 
     // verify that the directory was created
-    if (!this._pathExists(path)) {
+    if (!pathExists(path)) {
       throw new Error(
         `[generator] Failed to create directory: ${path}. This is most likely caused by a bug in the generator.`,
       )
@@ -92,7 +93,7 @@ export default class GeneratorController {
 
     const configPath = join(this._rootPath, '.generaterc')
     // check if config file exists
-    if (!this._pathExists(configPath)) {
+    if (!pathExists(configPath)) {
       console.log('[generator] No config file found. Using default config.')
       return
     }
@@ -113,26 +114,6 @@ export default class GeneratorController {
     }
   }
 
-  /**
-   * Check if the path ends with a directory.
-   * @param path The path to check.
-   * @returns `false` if the final item in the path contains a period (`.`), otherwise `true`.
-   */
-  private _pathEndsWithDir(path: string): boolean {
-    const arrPath = path.split('/')
-    const lastItem = arrPath[arrPath.length - 1]
-    return !lastItem.includes('.')
-  }
-
-  /**
-   * Check if the path exists.
-   * @param path The path to check.
-   * @returns `true` if the path exists, otherwise `false`.
-   */
-  private _pathExists(path: string): boolean {
-    return existsSync(path)
-  }
-
   private _preparePath(): void {
     console.log(`[generator] Preparing path: ${this._relativePath}`)
     console.group()
@@ -144,7 +125,7 @@ export default class GeneratorController {
     const arrPath = relativePath.split('/')
 
     // remove file from the end of array if it exists
-    if (!this._pathEndsWithDir(relativePath)) arrPath.pop()
+    if (!pathEndsWithDir(relativePath)) arrPath.pop()
 
     // confirm that every item is a directory
     const isDir = arrPath.every((item) => !item.includes('.'))
@@ -155,7 +136,7 @@ export default class GeneratorController {
     let currentPath = this._rootPath
     for (const dirName of arrPath) {
       currentPath = join(currentPath, dirName)
-      if (!this._pathExists(currentPath)) {
+      if (!pathExists(currentPath)) {
         if (this._config.createDir) {
           // create directory
           this._createDir(currentPath)
