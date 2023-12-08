@@ -5,15 +5,16 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
+    "module": "CommonJS",
     "outDir": "dist",
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2016"
+    "target": "ES2021"
   },
   "exclude": [
     "dist",
-    "node_modules"
+    "node_modules",
+    "sandboxes"
   ],
   "include": [
     "src/**/*.ts"
