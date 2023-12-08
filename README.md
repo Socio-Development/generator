@@ -41,9 +41,9 @@ export const iconNames = ['add', 'delete'] as const;
 export type IconName = (typeof iconNames)[number];
 ```
 
-## Configuration options
+# Configuration options
 
-### Create Directory
+## Create Directory
 
 **Name** `.createDir`
 
@@ -54,13 +54,13 @@ This option controls whether or not the generator will create new directories in
 - If `true`, the generator will add directories if they don't exist.
 - If `false`, the generator will throw an error if it encounters a directory that doesn't exist.
 
-### Dot-prefix Whitelist
+## Dot-prefix Whitelist
 
 **name** `.dotPrefixWhitelist`
 
 On some occasions, the generator may encounter directory- and file names that start with a dot (.gitignore, .husky). These names makes it difficult to differentiate between directories and files. If the generator encounters a dot-prefixed name it can't differentiate, it will throw an error. You can add directories and files to the whitelist to prevent this from happening.
 
-#### Example
+### Example
 
 Let's say the generator encounters `./packages/utils/.env` and throws an error:
 
@@ -84,7 +84,7 @@ export default defineConfig({
 
 The generator only validates the very end of paths, so only add the quoted name provided by the error message.
 
-### Safe Mode (Danger Zone)
+## Safe Mode (Danger Zone)
 
 **Name** `.safeMode`
 
@@ -92,10 +92,10 @@ The generator only validates the very end of paths, so only add the quoted name 
 
 In safe mode, the generator will automatically add a directory to the end of the provided path. This is to prevent the generator from overwriting any of your files. It also has the added benefit of letting you know which files should not be edited.
 
-## Warning
+### Warning
 Be extremely careful when disabling this option as it can cause the generator to overwrite your files.
 
-### Safe Mode Directory Name
+## Safe Mode Directory Name
 
 **Name** `.safetyDirName`
 
