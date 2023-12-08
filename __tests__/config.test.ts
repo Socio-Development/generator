@@ -13,7 +13,7 @@ describe('defineConfig', () => {
     const config = defineConfig({
       createDir: false,
       safeMode: false,
-      safetyDirName: 'custom'
+      safetyDirName: 'custom',
     })
     expect(config).toHaveProperty('origin', 'function')
     expect(config).toHaveProperty('createDir', false)

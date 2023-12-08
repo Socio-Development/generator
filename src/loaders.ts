@@ -20,7 +20,7 @@ export function loadConfig(): Config {
     console.log('[generator] No config file found')
   } else {
     console.log(`[generator] Config file found at: ${configPath}`)
-    
+
     // TODO: Implement .genrc file parsing
     console.info('[generator] Config file parsing not implemented yet')
   }
@@ -29,7 +29,7 @@ export function loadConfig(): Config {
     console.log('[generator] Using default config')
     config = {
       ...defaultConfig,
-      origin: 'default'
+      origin: 'default',
     }
   }
 

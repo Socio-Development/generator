@@ -21,7 +21,6 @@ export function isConfig(value: unknown): value is Config {
  */
 export function isConfigOrigin(value: unknown): value is ConfigOrigin {
   return (
-    typeof value === 'string' &&
-    ['default', 'file', 'function'].includes(value)
+    typeof value === 'string' && ['default', 'file', 'function'].includes(value)
   )
 }

@@ -8,9 +8,7 @@
     "module": "CommonJS",
     "outDir": "dist",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
     "skipLibCheck": true,
     "strict": true,
@@ -24,7 +22,5 @@
     "sandboxes",
     "src/sandbox.ts"
   ],
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }

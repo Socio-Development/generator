@@ -2,15 +2,9 @@ import { isConfig, isConfigOrigin } from '../src/utils'
 
 describe('isConfig', () => {
   test('should return true for valid configs', () => {
-    expect(
-      isConfig({ origin: 'default' })
-    ).toBe(true)
-    expect(
-      isConfig({ origin: 'file', safetyDirName: '_custom' })
-    ).toBe(true)
-    expect(
-      isConfig({ createDir: false,  origin: 'function' })
-    ).toBe(true)
+    expect(isConfig({ origin: 'default' })).toBe(true)
+    expect(isConfig({ origin: 'file', safetyDirName: '_custom' })).toBe(true)
+    expect(isConfig({ createDir: false, origin: 'function' })).toBe(true)
   })
 
   test('should return false if the origin property is missing', () => {

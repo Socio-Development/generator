@@ -9,10 +9,10 @@ import { Config, UserConfig } from './types'
 export function defineConfig(config: Partial<UserConfig>): Config {
   const combinedConfig: UserConfig = {
     ...defaultConfig,
-    ...config
+    ...config,
   }
   return {
     ...combinedConfig,
-    origin: 'function'
+    origin: 'function',
   }
 }

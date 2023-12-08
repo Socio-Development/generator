@@ -1,0 +1,14 @@
+.husky
+.vscode
+coverage
+dist
+node_modules
+
+**/*.json
+**/*.md
+
+.gitignore
+.prettierignore
+.prettierrc
+
+LICENSE

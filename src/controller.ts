@@ -21,12 +21,7 @@ export default class GeneratorController {
   /** Project root path. */
   private _rootPath: string
 
-  constructor({
-    code,
-    fileName,
-    language,
-    path
-  }: GeneratorOptions) {
+  constructor({ code, fileName, language, path }: GeneratorOptions) {
     this._code = code
     this._config = { ...defaultConfig, origin: 'default' }
     this._fileName = fileName
@@ -47,12 +42,16 @@ export default class GeneratorController {
   private _createDir(path: string): void {
     // verify that the path is a directory
     if (!this._pathEndsWithDir(path)) {
-      throw new Error(`[generator] Invalid directory path: ${path}. This is most likely caused by a bug in the generator.`)
+      throw new Error(
+        `[generator] Invalid directory path: ${path}. This is most likely caused by a bug in the generator.`,
+      )
     }
 
     // verify that the path doesn't exist
     if (this._pathExists(path)) {
-      throw new Error(`[generator] Directory already exists: ${path}. The current process should not have been started and is most likely caused by a bug in the generator.`)
+      throw new Error(
+        `[generator] Directory already exists: ${path}. The current process should not have been started and is most likely caused by a bug in the generator.`,
+      )
     }
 
     // create directory
@@ -61,7 +60,9 @@ export default class GeneratorController {
 
     // verify that the directory was created
     if (!this._pathExists(path)) {
-      throw new Error(`[generator] Failed to create directory: ${path}. This is most likely caused by a bug in the generator.`)
+      throw new Error(
+        `[generator] Failed to create directory: ${path}. This is most likely caused by a bug in the generator.`,
+      )
     }
   }
 
@@ -144,10 +145,11 @@ export default class GeneratorController {
 
     // remove file from the end of array if it exists
     if (!this._pathEndsWithDir(relativePath)) arrPath.pop()
-    
+
     // confirm that every item is a directory
-    const isDir = arrPath.every(item => !item.includes('.'))
-    if (!isDir) throw new Error(`[generator] Invalid path: ${this._relativePath}`)
+    const isDir = arrPath.every((item) => !item.includes('.'))
+    if (!isDir)
+      throw new Error(`[generator] Invalid path: ${this._relativePath}`)
 
     // check that every directory exists
     let currentPath = this._rootPath
@@ -158,7 +160,9 @@ export default class GeneratorController {
           // create directory
           this._createDir(currentPath)
         } else {
-          throw new Error(`[generator] Directory does not exist: ${currentPath}`)
+          throw new Error(
+            `[generator] Directory does not exist: ${currentPath}`,
+          )
         }
       }
     }
@@ -173,7 +177,12 @@ export default class GeneratorController {
     const file = `${this._fileName}.${this._fileExtension}`
 
     if (this._config.safeMode) {
-      return join(this._rootPath, this._relativePath, this._config.safetyDirName, file)
+      return join(
+        this._rootPath,
+        this._relativePath,
+        this._config.safetyDirName,
+        file,
+      )
     }
     return join(this._rootPath, this._relativePath, file)
   }
