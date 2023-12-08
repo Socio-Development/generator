@@ -11,7 +11,12 @@ export const directoryWhitelist = ['.github', '.husky', '.vscode']
  * A list of file names that starts with a period (.gitignore, .prettierignore, .prettierrc).
  * This list is used to help differentiate files from directories.
  */
-export const fileWhitelist = ['.gitignore', '.prettierignore', '.prettierrc']
+export const fileWhitelist = [
+  '.env',
+  '.gitignore',
+  '.prettierignore',
+  '.prettierrc',
+]
 
 /**
  * Creates a config object from the user provided config.

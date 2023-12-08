@@ -106,6 +106,8 @@ describe('pathEndsWithDir', () => {
     expect(pathEndsWithDir('src/foo/index.ts')).toBe(false)
     expect(pathEndsWithDir('src/foo/bar/index.ts')).toBe(false)
     expect(pathEndsWithDir('.gitignore')).toBe(false)
+    expect(pathEndsWithDir('packages/utils/.env')).toBe(false)
+    expect(pathEndsWithDir('packages/utils/.env.local')).toBe(false)
   })
 
   it('should throw an error if the path is empty', () => {
@@ -113,13 +115,13 @@ describe('pathEndsWithDir', () => {
   })
 
   it('should throw an error if the final item in the path cannot be determined', () => {
-    expect(() => pathEndsWithDir('.test')).toThrow()
     expect(() => pathEndsWithDir('src/.')).toThrow()
     expect(() => pathEndsWithDir('src/..')).toThrow()
     expect(() => pathEndsWithDir('src/foo/.')).toThrow()
     expect(() => pathEndsWithDir('src/foo/..')).toThrow()
     expect(() => pathEndsWithDir('src/foo/bar/.')).toThrow()
     expect(() => pathEndsWithDir('src/foo/bar/..')).toThrow()
+    expect(() => pathEndsWithDir('.test')).toThrow()
   })
 })
 
