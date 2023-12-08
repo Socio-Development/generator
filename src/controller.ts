@@ -40,7 +40,7 @@ export default class GeneratorController {
    */
   private _createDir(path: string): void {
     // verify that the path is a directory
-    if (!pathEndsWithDir(path)) {
+    if (!pathEndsWithDir(this._config, path)) {
       throw new Error(
         `[generator] Invalid directory path: ${path}. This is most likely caused by a bug in the generator.`,
       )
@@ -91,7 +91,7 @@ export default class GeneratorController {
     const arrPath = relativePath.split('/')
 
     // remove file from the end of array if it exists
-    if (!pathEndsWithDir(relativePath)) arrPath.pop()
+    if (!pathEndsWithDir(this._config, relativePath)) arrPath.pop()
 
     // confirm that every item is a directory
     const isDir = arrPath.every((item) => !item.includes('.'))

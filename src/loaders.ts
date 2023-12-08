@@ -20,8 +20,17 @@ export function loadConfig(): Config {
   } else {
     Logger.add(`Config file found at: ${configPath}`)
 
-    // TODO: Implement .genrc file parsing
-    console.info('[generator] Config file parsing not implemented yet')
+    try {
+      const userConfig = require(configPath)
+      Logger.add('Using user config')
+      config = {
+        ...defaultConfig,
+        ...userConfig.default,
+        origin: 'user',
+      }
+    } catch (err) {
+      Logger.add('Failed to load config file')
+    }
   }
 
   if (!config) {

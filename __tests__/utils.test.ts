@@ -1,3 +1,5 @@
+import defaultConfig from '../src/defaultConfig'
+import { Config } from '../src/types'
 import {
   isConfig,
   isConfigOrigin,
@@ -91,37 +93,42 @@ describe('parsePath', () => {
 })
 
 describe('pathEndsWithDir', () => {
+  const config: Config = {
+    ...defaultConfig,
+    origin: 'default',
+  }
+
   it('should return true if the path ends with a directory', () => {
-    expect(pathEndsWithDir('src')).toBe(true)
-    expect(pathEndsWithDir('src/')).toBe(true)
-    expect(pathEndsWithDir('src/foo')).toBe(true)
-    expect(pathEndsWithDir('src/foo/')).toBe(true)
-    expect(pathEndsWithDir('src/foo/bar')).toBe(true)
-    expect(pathEndsWithDir('src/foo/bar/')).toBe(true)
-    expect(pathEndsWithDir('.husky')).toBe(true)
+    expect(pathEndsWithDir(config, 'src')).toBe(true)
+    expect(pathEndsWithDir(config, 'src/')).toBe(true)
+    expect(pathEndsWithDir(config, 'src/foo')).toBe(true)
+    expect(pathEndsWithDir(config, 'src/foo/')).toBe(true)
+    expect(pathEndsWithDir(config, 'src/foo/bar')).toBe(true)
+    expect(pathEndsWithDir(config, 'src/foo/bar/')).toBe(true)
+    expect(pathEndsWithDir(config, '.husky')).toBe(true)
   })
 
   it('should return false if the path ends with a file', () => {
-    expect(pathEndsWithDir('src/index.ts')).toBe(false)
-    expect(pathEndsWithDir('src/foo/index.ts')).toBe(false)
-    expect(pathEndsWithDir('src/foo/bar/index.ts')).toBe(false)
-    expect(pathEndsWithDir('.gitignore')).toBe(false)
-    expect(pathEndsWithDir('packages/utils/.env')).toBe(false)
-    expect(pathEndsWithDir('packages/utils/.env.local')).toBe(false)
+    expect(pathEndsWithDir(config, 'src/index.ts')).toBe(false)
+    expect(pathEndsWithDir(config, 'src/foo/index.ts')).toBe(false)
+    expect(pathEndsWithDir(config, 'src/foo/bar/index.ts')).toBe(false)
+    expect(pathEndsWithDir(config, '.gitignore')).toBe(false)
+    expect(pathEndsWithDir(config, 'packages/utils/.env')).toBe(false)
+    expect(pathEndsWithDir(config, 'packages/utils/.env.local')).toBe(false)
   })
 
   it('should throw an error if the path is empty', () => {
-    expect(() => pathEndsWithDir('')).toThrow()
+    expect(() => pathEndsWithDir(config, '')).toThrow()
   })
 
   it('should throw an error if the final item in the path cannot be determined', () => {
-    expect(() => pathEndsWithDir('src/.')).toThrow()
-    expect(() => pathEndsWithDir('src/..')).toThrow()
-    expect(() => pathEndsWithDir('src/foo/.')).toThrow()
-    expect(() => pathEndsWithDir('src/foo/..')).toThrow()
-    expect(() => pathEndsWithDir('src/foo/bar/.')).toThrow()
-    expect(() => pathEndsWithDir('src/foo/bar/..')).toThrow()
-    expect(() => pathEndsWithDir('.test')).toThrow()
+    expect(() => pathEndsWithDir(config, 'src/.')).toThrow()
+    expect(() => pathEndsWithDir(config, 'src/..')).toThrow()
+    expect(() => pathEndsWithDir(config, 'src/foo/.')).toThrow()
+    expect(() => pathEndsWithDir(config, 'src/foo/..')).toThrow()
+    expect(() => pathEndsWithDir(config, 'src/foo/bar/.')).toThrow()
+    expect(() => pathEndsWithDir(config, 'src/foo/bar/..')).toThrow()
+    expect(() => pathEndsWithDir(config, '.test')).toThrow()
   })
 })
 
