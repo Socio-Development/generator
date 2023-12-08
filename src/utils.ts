@@ -1,4 +1,5 @@
 import { existsSync, statSync } from 'fs'
+import { ParsedPath, parse } from 'path'
 import { Config, ConfigOrigin } from './types'
 
 /**
@@ -42,6 +43,15 @@ export function isDirectory(path: string): boolean {
  */
 export function isFile(path: string): boolean {
   return statSync(path).isFile()
+}
+
+/**
+ * Parses a path into an object.
+ * @param path The path to parse.
+ * @returns The parsed path.
+ */
+export function parsePath(path: string): ParsedPath {
+  return parse(path)
 }
 
 /**

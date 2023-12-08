@@ -3,6 +3,7 @@ import {
   isConfigOrigin,
   isDirectory,
   isFile,
+  parsePath,
   pathEndsWithDir,
   pathExists,
 } from '../src/utils'
@@ -67,6 +68,25 @@ describe('isFile', () => {
 
   it('should throw an error if the path is empty', () => {
     expect(() => isFile('')).toThrow()
+  })
+})
+
+describe('parsePath', () => {
+  it('should return a parsed path', () => {
+    expect(parsePath('src/index.ts')).toEqual({
+      root: '',
+      dir: 'src',
+      base: 'index.ts',
+      ext: '.ts',
+      name: 'index',
+    })
+    expect(parsePath('src/types/_generated/icons.ts')).toEqual({
+      root: '',
+      dir: 'src/types/_generated',
+      base: 'icons.ts',
+      ext: '.ts',
+      name: 'icons',
+    })
   })
 })
 
