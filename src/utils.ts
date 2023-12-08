@@ -30,6 +30,7 @@ export function isConfigOrigin(value: unknown): value is ConfigOrigin {
  * Checks if the provided path ends with a directory.
  * @param path The path to check.
  * @returns `false` if the final item in the path contains a period (`.`), otherwise `true`.
+ * @throws An error if the path is empty.
  */
 export function pathEndsWithDir(path: string): boolean {
   if (path.length === 0) throw new Error('Path cannot be empty.')
