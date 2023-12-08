@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'fs'
 import { join, resolve } from 'path'
-import defaultConfig from './defaultConfig'
+import { loadConfig } from './loaders'
 import { Config, GeneratorOptions, SupportedLanguage } from './types'
 import { pathEndsWithDir, pathExists } from './utils'
 
@@ -24,13 +24,11 @@ export default class GeneratorController {
 
   constructor({ code, fileName, language, path }: GeneratorOptions) {
     this._code = code
-    this._config = { ...defaultConfig, origin: 'default' }
+    this._config = loadConfig()
     this._fileName = fileName
     this._language = language
     this._relativePath = path
     this._rootPath = resolve('.')
-
-    this._loadConfig()
   }
 
   /**
@@ -79,38 +77,6 @@ export default class GeneratorController {
         return 'ts'
       default:
         throw new Error(`[generator] Unsupported language: ${this._language}`)
-    }
-  }
-
-  /**
-   * Load the config from the root directory.
-   * If the config file doesn't exist, it will be ignored.
-   * @throws If the config file is invalid.
-   */
-  private _loadConfig(): void {
-    console.log('[generator] Loading config...')
-    console.group()
-
-    const configPath = join(this._rootPath, '.generaterc')
-    // check if config file exists
-    if (!pathExists(configPath)) {
-      console.log('[generator] No config file found. Using default config.')
-      return
-    }
-
-    try {
-      const rootConfig = require(configPath)
-      // Check if rootConfig is GeneratorConfig
-      if (rootConfig && typeof rootConfig === 'object') {
-        this._config = rootConfig
-        console.log('[generator] Config was loaded successfully.')
-      } else {
-        throw new Error('[generator] Invalid config.')
-      }
-    } catch (err) {
-      console.warn('[generator] Failed to load root config.')
-    } finally {
-      console.groupEnd()
     }
   }
 
