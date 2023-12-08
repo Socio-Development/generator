@@ -6,13 +6,13 @@ import {
 } from '../src/utils'
 
 describe('isConfig', () => {
-  test('should return true for valid configs', () => {
+  it('should return true for valid configs', () => {
     expect(isConfig({ origin: 'default' })).toBe(true)
     expect(isConfig({ origin: 'file', safetyDirName: '_custom' })).toBe(true)
     expect(isConfig({ createDir: false, origin: 'function' })).toBe(true)
   })
 
-  test('should return false if the origin property is missing', () => {
+  it('should return false if the origin property is missing', () => {
     expect(isConfig({})).toBe(false)
     expect(isConfig({ origin: null })).toBe(false)
     expect(isConfig({ origin: undefined })).toBe(false)
@@ -22,13 +22,13 @@ describe('isConfig', () => {
 })
 
 describe('isConfigOrigin', () => {
-  test('should return true for valid config origins', () => {
+  it('should return true for valid config origins', () => {
     expect(isConfigOrigin('default')).toBe(true)
     expect(isConfigOrigin('file')).toBe(true)
     expect(isConfigOrigin('function')).toBe(true)
   })
 
-  test('should return false for invalid config origins', () => {
+  it('should return false for invalid config origins', () => {
     expect(isConfigOrigin('')).toBe(false)
     expect(isConfigOrigin('foo')).toBe(false)
     expect(isConfigOrigin('root')).toBe(false)
@@ -37,7 +37,7 @@ describe('isConfigOrigin', () => {
 })
 
 describe('pathEndsWithDir', () => {
-  test('should return true if the path ends with a directory', () => {
+  it('should return true if the path ends with a directory', () => {
     expect(pathEndsWithDir('src')).toBe(true)
     expect(pathEndsWithDir('src/')).toBe(true)
     expect(pathEndsWithDir('src/foo')).toBe(true)
@@ -46,21 +46,25 @@ describe('pathEndsWithDir', () => {
     expect(pathEndsWithDir('src/foo/bar/')).toBe(true)
   })
 
-  test('should return false if the path ends with a file', () => {
+  it('should return false if the path ends with a file', () => {
     expect(pathEndsWithDir('src/index.ts')).toBe(false)
     expect(pathEndsWithDir('src/foo/index.ts')).toBe(false)
     expect(pathEndsWithDir('src/foo/bar/index.ts')).toBe(false)
     expect(pathEndsWithDir('src/foo/bar/.gitignore')).toBe(false)
   })
+
+  it('should throw an error if the path is empty', () => {
+    expect(() => pathEndsWithDir('')).toThrow()
+  })
 })
 
 describe('pathExists', () => {
-  test('should return true if the path exists', () => {
+  it('should return true if the path exists', () => {
     expect(pathExists('src')).toBe(true)
     expect(pathExists('src/index.ts')).toBe(true)
   })
 
-  test('should return false if the path does not exist', () => {
+  it('should return false if the path does not exist', () => {
     expect(pathExists('foo')).toBe(false)
     expect(pathExists('foo/bar')).toBe(false)
     expect(pathExists('foo/bar/baz')).toBe(false)

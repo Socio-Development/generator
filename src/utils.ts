@@ -32,9 +32,9 @@ export function isConfigOrigin(value: unknown): value is ConfigOrigin {
  * @returns `false` if the final item in the path contains a period (`.`), otherwise `true`.
  */
 export function pathEndsWithDir(path: string): boolean {
+  if (path.length === 0) throw new Error('Path cannot be empty.')
   const arrPath = path.split('/')
-  const lastItem = arrPath[arrPath.length - 1]
-  return !lastItem.includes('.')
+  return !arrPath[arrPath.length - 1]?.includes('.')
 }
 
 /**
