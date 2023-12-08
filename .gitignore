@@ -131,4 +131,4 @@ dist
 
 # Development environment
 sandboxes
-*.dev.ts
+sandbox.ts

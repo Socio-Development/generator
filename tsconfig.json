@@ -1,20 +1,28 @@
 {
   "compilerOptions": {
+    "allowJs": false,
     "baseUrl": ".",
     "declaration": true,
-    "declarationMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "module": "CommonJS",
     "outDir": "dist",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2021"
   },
   "exclude": [
+    "__tests__",
+    "coverage",
     "dist",
     "node_modules",
-    "sandboxes"
+    "sandboxes",
+    "src/sandbox.ts"
   ],
   "include": [
     "src/**/*.ts"
