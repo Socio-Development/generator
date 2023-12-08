@@ -1,18 +1,30 @@
 {
   "compilerOptions": {
+    /* Base options */
     "allowJs": false,
-    "baseUrl": ".",
-    "declaration": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "CommonJS",
-    "outDir": "dist",
-    "paths": {
-      "@/*": ["src/*"]
-    },
+    "moduleDetection": "auto",
+    "resolveJsonModule": false,
     "skipLibCheck": true,
+    "target": "ES2022",
+    "verbatimModuleSyntax": false,
+    /* Strictness */
+    "noUncheckedIndexedAccess": true,
     "strict": true,
-    "target": "ES2021"
+    /* Transpiling with TypeScript */
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "dist",
+    "sourceMap": true,
+    /* No DOM */
+    "lib": [
+      "ES2022"
+    ],
+    /* Library mode */
+    "declaration": true,
+    /* Other */
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true
   },
   "exclude": [
     "__tests__",
@@ -22,5 +34,7 @@
     "sandboxes",
     "src/sandbox.ts"
   ],
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts"
+  ]
 }
