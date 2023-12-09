@@ -1,7 +1,7 @@
 <p align="center">
-  <img href="./docs/assets/socio-full.svg" alt="Socio logo">
+  <img src="https://raw.githubusercontent.com/Socio-Development/generator/cd0f88d7630b952f7470e01e752fa8053eec7b9d/docs/assets/socio-full.svg" alt="Socio logo" width="400px">
 </p>
-
+<br />
 <p align="center">
   <a href="https://github.com/Socio-Development/generator/actions/workflows/build-status.yml"><img src="https://github.com/Socio-Development/generator/actions/workflows/build-status.yml/badge.svg?branch=main" alt="build status"></a>
   <a href="https://github.com/Socio-Development/generator/actions/workflows/test-status.yml"><img src="https://github.com/Socio-Development/generator/actions/workflows/test-status.yml/badge.svg?branch=main" alt="test status"></a>
