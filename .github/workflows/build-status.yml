@@ -9,6 +9,7 @@ on:
     paths:
       - '__tests__/**'
       - 'src/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
