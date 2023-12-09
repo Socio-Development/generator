@@ -1,61 +1,76 @@
-import { renameSync, rmSync, writeFileSync } from 'fs'
+import { existsSync, renameSync, rmSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
-import { loadConfig } from '../loaders'
+import defaultConfig from '../defaultConfig'
+import { loadConfig, userConfigPath } from '../loaders'
 import { UserConfig } from '../types'
-import { pathExists } from '../utils'
 
 describe('loadConfig', () => {
-  const configName = 'generator.config.ts'
   const tmpName = 'orig_generator.config.ts'
   const rootPath = resolve('.')
-  const configPath = resolve(rootPath, configName)
   const tmpPath = resolve(rootPath, tmpName)
 
-  const createConfig = (userConfig: Partial<UserConfig> = {}) => {
+  const createConfig = (userConfig: any = {}) => {
     const template: string[] = [
       'import { defineConfig } from "./src"',
       `export default defineConfig(${JSON.stringify(userConfig, null, 2)})`,
     ]
+
+    // remove double quotes from keys
+    if (template[1] !== undefined)
+      template[1] = template[1].replace(/"([^(")"]+)":/g, '$1:')
+
     const code = template.join('\n')
-    writeFileSync(configPath, code, 'utf8')
+
+    writeFileSync(userConfigPath, code, 'utf8')
   }
+
   const deleteConfig = () => {
-    if (pathExists(configPath)) {
-      rmSync(configPath)
+    if (existsSync(userConfigPath)) {
+      rmSync(userConfigPath)
     }
   }
 
   afterAll(() => {
-    deleteConfig()
-
     // check if temporary config file exists
-    if (pathExists(tmpPath)) {
+    if (existsSync(tmpPath)) {
       // restore config file
-      renameSync(tmpPath, configPath)
+      renameSync(tmpPath, userConfigPath)
     }
-  })
-
-  afterEach(() => {
-    deleteConfig()
   })
 
   beforeAll(() => {
     // check if config file exists
-    if (pathExists(configPath)) {
+    if (existsSync(userConfigPath)) {
       // temporarily rename config file
-      renameSync(configPath, tmpPath)
+      renameSync(userConfigPath, tmpPath)
     }
+  })
+
+  beforeEach(() => {
+    deleteConfig()
+    jest.resetModules()
   })
 
   it('should load the default config if no config file is found', () => {
     const config = loadConfig()
-    expect(config.origin).toEqual('default')
+    expect(config).toStrictEqual(defaultConfig)
+  })
+
+  it('should load the default config if the user config is invalid', () => {
+    const input = {
+      invalidProp: 'Hi, I am invalid!',
+    }
+    createConfig(input)
+    const config = loadConfig()
+    expect(config).toStrictEqual(defaultConfig)
   })
 
   it('should load the user config if available', () => {
-    createConfig()
+    const input: UserConfig = {
+      createDir: false,
+    }
+    createConfig(input)
     const config = loadConfig()
-    expect(config.origin).toEqual('user')
-    //Logger.print()
+    expect(config).toStrictEqual(input)
   })
 })
