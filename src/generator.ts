@@ -1,14 +1,20 @@
 import { join, resolve } from 'path'
-import GeneratorController from './controller'
+import { mergeConfig } from './config'
+import { loadConfig } from './loaders'
 import { Logger } from './logger'
 import { Config, GeneratorOptions, PathPreparationResult } from './types'
 import { pathEndsWithDir, pathExists } from './utils'
 
 export function generate(options: GeneratorOptions): void {
-  const controller = new GeneratorController(options)
-  //controller.write()
+  Logger.startProcess(`START`)
 
-  console.log(controller)
+  const config = mergeConfig(loadConfig())
+  const pathStatus = preparePath(config, options.path)
+
+  console.log(JSON.stringify({ config, pathStatus }, null, 2))
+
+  Logger.endProcess(`DONE`)
+  Logger.print()
 }
 
 export function generateDirPath(path: string): void {
