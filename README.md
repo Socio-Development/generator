@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Socio-Development/generator/cd0f88d7630b952f7470e01e752fa8053eec7b9d/docs/assets/socio-full.svg" alt="Socio logo" width="400px">
+  <img src="https://raw.githubusercontent.com/Socio-Development/generator/66b1ed38bb1f886c5250e69edf8885b3c4656971/docs/assets/socio-full.svg" alt="Socio logo" width="400px">
 </p>
 <br />
 <p align="center">
