@@ -1,3 +1,4 @@
+import { resolve } from 'path'
 import { UserConfigRequired } from './types'
 
 export const defaultConfig: UserConfigRequired = {
@@ -9,3 +10,6 @@ export const defaultConfig: UserConfigRequired = {
   safeMode: true,
   safetyDirName: '_generated',
 }
+
+export const userConfigName = 'generator.config.ts'
+export const userConfigPath = resolve('.', userConfigName)

@@ -1,12 +1,8 @@
 import { existsSync } from 'fs'
-import { resolve } from 'path'
-import { defaultConfig } from './constants'
+import { defaultConfig, userConfigName, userConfigPath } from './constants'
 import { Logger } from './logger'
 import { UserConfig } from './types'
 import { isUserConfig } from './utils'
-
-export const userConfigName = 'generator.config.ts'
-export const userConfigPath = resolve('.', userConfigName)
 
 /**
  * Loads the user config from `.generator.config.ts` or uses the default config if no config file is found.
