@@ -1,12 +1,9 @@
-name: CI
+# Reports build and test status for each pull request
+
+name: PR - Build and Test
 
 on:
   pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - 'README.md'
-  push:
     branches:
       - main
 
@@ -15,6 +12,7 @@ concurrency:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,7 +20,7 @@ jobs:
         name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          cache: 'npm'
+          cache: npm
           node-version: 20
       -
         name: Install dependencies
@@ -31,6 +29,7 @@ jobs:
         name: Build
         run: npm run build
   test:
+    name: Test
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -39,11 +38,11 @@ jobs:
         name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          cache: 'npm'
+          cache: npm
           node-version: 20
       -
         name: Install dependencies
         run: npm ci
       -
         name: Test
-        run: npm run test
+        run: npm run test:ci
