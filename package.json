@@ -8,6 +8,7 @@
     "dev": "ts-node src/sandbox.ts",
     "prepare": "husky install",
     "test": "jest",
+    "test:ci": "jest --ci --coverage=false",
     "test:watch": "jest --watch"
   },
   "files": [

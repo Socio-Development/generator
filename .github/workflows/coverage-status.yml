@@ -1,0 +1,33 @@
+# Reports test coverage after each push to main
+
+name: test coverage
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '__tests__/**'
+      - 'src/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  test-coverage:
+    name: Test - Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      -
+        name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 20
+      -
+        name: Install dependencies
+        run: npm ci
+      - 
+        name: Test
+        run: npm run test
