@@ -1,5 +1,5 @@
 import defaultConfig from './defaultConfig'
-import { UserConfig, UserConfigRequired } from './types'
+import { Config, UserConfig } from './types'
 
 /**
  * Creates a config object from the user provided config.
@@ -12,16 +12,26 @@ export function defineConfig(config: Partial<UserConfig>): Partial<UserConfig> {
 
 /**
  * Merges the user provided config with the default config.
- * @param config The user provided config.
+ * @param userConfig The user provided config.
  * @returns A user config containing all properties.
  */
-export function mergeConfig(config: UserConfig): UserConfigRequired {
+export function mergeConfig(userConfig: UserConfig): Config {
+  const origin = Object.keys(userConfig).length > 0 ? 'user' : 'default'
+
+  if (origin === 'default') {
+    return {
+      ...defaultConfig,
+      origin,
+    }
+  }
+
   return {
     ...defaultConfig,
-    ...config,
+    ...userConfig,
     dotPrefixWhitelist: {
       ...defaultConfig.dotPrefixWhitelist,
-      ...config.dotPrefixWhitelist,
+      ...userConfig.dotPrefixWhitelist,
     },
+    origin: 'user',
   }
 }

@@ -17,7 +17,10 @@ describe('defineConfig', () => {
 describe('mergeConfig', () => {
   it('should return the default config if no user config is provided', () => {
     const config = mergeConfig({})
-    expect(config).toStrictEqual(defaultConfig)
+    expect(config).toStrictEqual({
+      ...defaultConfig,
+      origin: 'default',
+    })
   })
 
   it('should return the merged config if a user config is provided', () => {
@@ -30,6 +33,7 @@ describe('mergeConfig', () => {
     expect(config).toStrictEqual({
       ...defaultConfig,
       ...userConfig,
+      origin: 'user',
     })
   })
 })
