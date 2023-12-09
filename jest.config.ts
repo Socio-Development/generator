@@ -49,7 +49,7 @@ export default {
     global: {
       branches: 80,
       functions: 80,
-      lines: 57,
+      lines: 80,
     },
     './src/config.ts': {
       branches: 100,
