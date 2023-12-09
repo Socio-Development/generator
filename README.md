@@ -1,5 +1,11 @@
 # Generator
 
+<p align="left">
+  <a href="https://github.com/Socio-Development/generator/actions/workflows/build-status.yml"><img src="https://github.com/Socio-Development/generator/actions/workflows/build-status.yml/badge.svg?branch=main" alt="build status"></a>
+  <a href="https://github.com/Socio-Development/generator/actions/workflows/test-status.yml"><img src="https://github.com/Socio-Development/generator/actions/workflows/test-status.yml/badge.svg?branch=main" alt="test status"></a>
+  <a href="https://github.com/Socio-Development/generator/actions/workflows/coverage-status.yml"><img src="https://github.com/Socio-Development/generator/actions/workflows/coverage-status.yml/badge.svg?branch=main" alt="test coverage status"></a>
+</p>
+
 A code generator that provides a reliable way of creating files in your project. Excellent for generating type definitions.
 
 ## Getting started
