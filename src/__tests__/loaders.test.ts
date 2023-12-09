@@ -1,8 +1,8 @@
 import { renameSync, rmSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
-import { loadConfig } from '../src/loaders'
-import { UserConfig } from '../src/types'
-import { pathExists } from '../src/utils'
+import { loadConfig } from '../loaders'
+import { UserConfig } from '../types'
+import { pathExists } from '../utils'
 
 describe('loadConfig', () => {
   const configName = 'generator.config.ts'

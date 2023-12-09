@@ -1,5 +1,5 @@
-import { defineConfig } from '../src/config'
-import { UserConfig } from '../src/types'
+import { defineConfig } from '../config'
+import { UserConfig } from '../types'
 
 describe('defineConfig', () => {
   it('should return the provided config', () => {

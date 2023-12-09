@@ -1,5 +1,5 @@
-import defaultConfig from '../src/defaultConfig'
-import { Config } from '../src/types'
+import defaultConfig from '../defaultConfig'
+import { Config } from '../types'
 import {
   isConfig,
   isConfigOrigin,
@@ -8,7 +8,7 @@ import {
   parsePath,
   pathEndsWithDir,
   pathExists,
-} from '../src/utils'
+} from '../utils'
 
 describe('isConfig', () => {
   it('should return true for valid configs', () => {
