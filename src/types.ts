@@ -27,6 +27,10 @@ export type GeneratorOptions = {
   path: string
 }
 
+export type PathPreparationResult = {
+  missingPaths: string[]
+}
+
 export type SupportedLanguage = (typeof supportedLanguages)[number]
 
 export type UserConfig = {
