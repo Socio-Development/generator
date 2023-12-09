@@ -1,6 +1,6 @@
 import { existsSync } from 'fs'
 import { resolve } from 'path'
-import defaultConfig from './defaultConfig'
+import { defaultConfig } from './constants'
 import { Logger } from './logger'
 import { UserConfig } from './types'
 import { isUserConfig } from './utils'

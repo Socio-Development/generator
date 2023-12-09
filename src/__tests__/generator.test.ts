@@ -1,4 +1,4 @@
-import defaultConfig from '../defaultConfig'
+import { defaultConfig } from '../constants'
 import { preparePath } from '../generator'
 import { Config } from '../types'
 

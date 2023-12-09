@@ -1,5 +1,5 @@
 import { defineConfig, mergeConfig } from '../config'
-import defaultConfig from '../defaultConfig'
+import { defaultConfig } from '../constants'
 import { UserConfig } from '../types'
 
 describe('defineConfig', () => {

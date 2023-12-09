@@ -1,4 +1,4 @@
-import defaultConfig from './defaultConfig'
+import { defaultConfig } from './constants'
 import { Config, ConfigOrigin, UserConfig } from './types'
 
 /**

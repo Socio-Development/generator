@@ -1,6 +1,6 @@
 import { existsSync, renameSync, rmSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
-import defaultConfig from '../defaultConfig'
+import { defaultConfig } from '../constants'
 import { loadConfig, userConfigPath } from '../loaders'
 import { UserConfig } from '../types'
 
