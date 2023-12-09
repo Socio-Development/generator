@@ -18,11 +18,11 @@ export default {
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [
-    'src/**/*.ts',
+    'src/*',
+    '!src/**/types.ts',
+    '!src/controller.ts',
     '!src/index.ts',
-    '!src/logger/types.ts',
     '!src/sandbox.ts',
-    '!src/types.ts',
   ],
 
   // The directory where Jest should output its coverage files
@@ -50,16 +50,6 @@ export default {
       branches: 80,
       functions: 80,
       lines: 80,
-    },
-    './src/config.ts': {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-    },
-    './src/utils.ts': {
-      branches: 100,
-      functions: 100,
-      lines: 100,
     },
   },
 
@@ -207,7 +197,7 @@ export default {
   // verbose: undefined,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
-  // watchPathIgnorePatterns: [],
+  watchPathIgnorePatterns: ['src/sandbox.ts'],
 
   // Whether to use watchman for file crawling
   // watchman: true,

@@ -2,46 +2,54 @@ import { existsSync } from 'fs'
 import { resolve } from 'path'
 import defaultConfig from './defaultConfig'
 import { Logger } from './logger'
-import { Config } from './types'
+import { UserConfig } from './types'
+import { isUserConfig } from './utils'
+
+export const userConfigName = 'generator.config.ts'
+export const userConfigPath = resolve('.', userConfigName)
 
 /**
  * Loads the user config from `.generator.config.ts` or uses the default config if no config file is found.
  * @returns The loaded config.
  */
-export function loadConfig(): Config {
-  let config: Config | null = null
-
+export function loadConfig(): UserConfig {
   Logger.startProcess('Loading config...')
-  const configPath = resolve('.', 'generator.config.ts')
 
-  const configExists = existsSync(configPath)
-  if (!configExists) {
+  let config: UserConfig | undefined
+
+  const userConfigExists = existsSync(userConfigPath)
+  if (!userConfigExists) {
     Logger.add('No config file found')
   } else {
-    Logger.add(`Config file found at: ${configPath}`)
+    Logger.add(`Config file found at: ${userConfigPath}`)
 
     try {
-      const userConfig = require(configPath)
-      Logger.add('Using user config')
-      config = {
-        ...defaultConfig,
-        ...userConfig.default,
-        origin: 'user',
+      Logger.add('Loading user config file...')
+
+      const userConfigImport = require(userConfigPath)
+      const userConfig = userConfigImport.default
+
+      Logger.add(`User config: ${JSON.stringify(userConfig, null, 2)}`)
+
+      if (!isUserConfig(userConfig)) {
+        Logger.add('Invalid config file')
+      } else {
+        Logger.add('Using user config')
+        config = userConfig
       }
     } catch (err) {
-      Logger.add('Failed to load config file')
+      Logger.add(`Something went wrong while loading ${userConfigName}`)
+      if (err instanceof Error) {
+        Logger.add(err.message)
+      }
     }
   }
 
   if (!config) {
     Logger.add('Using default config')
-    config = {
-      ...defaultConfig,
-      origin: 'default',
-    }
+    config = defaultConfig
   }
 
-  Logger.add(`Config origin: ${config.origin}`)
   Logger.endProcess('Config loaded successfully')
 
   return config

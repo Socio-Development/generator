@@ -1,13 +1,20 @@
-import { resolve } from 'path'
-import GeneratorController from './controller'
+import { join, resolve } from 'path'
+import { mergeConfig } from './config'
+import { loadConfig } from './loaders'
 import { Logger } from './logger'
-import { GeneratorOptions } from './types'
+import { Config, GeneratorOptions, PathPreparationResult } from './types'
+import { pathEndsWithDir, pathExists } from './utils'
 
 export function generate(options: GeneratorOptions): void {
-  const controller = new GeneratorController(options)
-  //controller.write()
+  Logger.startProcess(`START`)
 
-  console.log(controller)
+  const config = mergeConfig(loadConfig())
+  const pathStatus = preparePath(config, options.path)
+
+  console.log(JSON.stringify({ config, pathStatus }, null, 2))
+
+  Logger.endProcess(`DONE`)
+  Logger.print()
 }
 
 export function generateDirPath(path: string): void {
@@ -19,8 +26,21 @@ export function generateDirPath(path: string): void {
   Logger.endProcess(`Directory path generated`)
 }
 
-export function preparePath(path: string): void {
+/**
+ * Prepares a path for file generation.
+ * @param config The generator config.
+ * @param path The path to prepare.
+ * @returns An object containing the missing paths.
+ */
+export function preparePath(
+  config: Config,
+  path: string,
+): PathPreparationResult {
   Logger.startProcess(`[generator] Preparing path: ${path}`)
+
+  const result: PathPreparationResult = {
+    missingPaths: [],
+  }
 
   const rootPath = resolve('.')
 
@@ -31,9 +51,22 @@ export function preparePath(path: string): void {
   const arrPath = relativePath.split('/')
 
   // remove file from the end of array if it exists
-  //if (!pathEndsWithDir(relativePath)) arrPath.pop()
+  if (!pathEndsWithDir(config, relativePath)) {
+    const removedFile = arrPath.pop()
+    Logger.add(`Removed file from path: ${removedFile}`)
+  }
 
-  // confirm that every item is a directory
+  // check if the path exists
+  while (arrPath.length > 0) {
+    const currentPath = join(rootPath, ...arrPath)
+    Logger.add(`Checking path: ${join(...arrPath)}`)
+    if (!pathExists(currentPath)) {
+      Logger.add(`Flagging missing path: ${join(...arrPath)}`)
+      result.missingPaths.push(join(...arrPath))
+    }
+    arrPath.pop()
+  }
 
   Logger.endProcess(`[generator] Path prepared`)
+  return result
 }

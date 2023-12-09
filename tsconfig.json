@@ -27,11 +27,11 @@
     "forceConsistentCasingInFileNames": true
   },
   "exclude": [
-    "__tests__",
     "coverage",
     "dist",
     "node_modules",
     "sandboxes",
+    "src/__tests__",
     "src/sandbox.ts"
   ],
   "include": [

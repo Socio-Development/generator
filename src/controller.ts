@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from 'fs'
 import { join, resolve } from 'path'
+import { mergeConfig } from './config'
 import { loadConfig } from './loaders'
 import { Config, GeneratorOptions, SupportedLanguage } from './types'
 import { pathEndsWithDir, pathExists } from './utils'
@@ -24,11 +25,13 @@ export default class GeneratorController {
 
   constructor({ code, fileName, language, path }: GeneratorOptions) {
     this._code = code
-    this._config = loadConfig()
     this._fileName = fileName
     this._language = language
     this._relativePath = path
     this._rootPath = resolve('.')
+
+    const userConfig = loadConfig()
+    this._config = mergeConfig(userConfig)
   }
 
   /**

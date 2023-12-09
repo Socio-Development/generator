@@ -1,14 +1,15 @@
-import defaultConfig from '../src/defaultConfig'
-import { Config } from '../src/types'
+import defaultConfig from '../defaultConfig'
+import { Config } from '../types'
 import {
   isConfig,
   isConfigOrigin,
   isDirectory,
   isFile,
+  isUserConfig,
   parsePath,
   pathEndsWithDir,
   pathExists,
-} from '../src/utils'
+} from '../utils'
 
 describe('isConfig', () => {
   it('should return true for valid configs', () => {
@@ -70,6 +71,26 @@ describe('isFile', () => {
 
   it('should throw an error if the path is empty', () => {
     expect(() => isFile('')).toThrow()
+  })
+})
+
+describe('isUserConfig', () => {
+  it('should return true for valid user configs', () => {
+    expect(isUserConfig({})).toBe(true)
+    expect(isUserConfig(defaultConfig)).toBe(true)
+  })
+
+  it('should return false for invalid user configs', () => {
+    expect(isUserConfig({ origin: 'default' })).toBeFalsy()
+    expect(isUserConfig({ ...defaultConfig, invalidProp: true })).toBe(false)
+    expect(isUserConfig(() => 'hello')).toBe(false)
+    expect(isUserConfig([])).toBe(false)
+    expect(isUserConfig(null)).toBe(false)
+    expect(isUserConfig(undefined)).toBe(false)
+    expect(isUserConfig('hello')).toBe(false)
+    expect(isUserConfig(23)).toBe(false)
+    expect(isUserConfig(true)).toBe(false)
+    expect(isUserConfig({ invalidProp: 'Hi, I am invalid!' })).toBe(false)
   })
 })
 

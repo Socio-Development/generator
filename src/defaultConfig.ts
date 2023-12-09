@@ -1,4 +1,4 @@
-import { UserConfig } from './types'
+import { UserConfigRequired } from './types'
 
 export default {
   createDir: true,
@@ -8,4 +8,4 @@ export default {
   },
   safeMode: true,
   safetyDirName: '_generated',
-} satisfies UserConfig
+} satisfies UserConfigRequired
