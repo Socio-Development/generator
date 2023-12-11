@@ -1,7 +1,7 @@
 import { existsSync, statSync } from 'fs'
 import { ParsedPath, parse } from 'path'
-import defaultConfig from './defaultConfig'
-import { Config, ConfigOrigin, UserConfig } from './types'
+import { validateUserConfig } from './config'
+import { Config, ConfigOrigin } from './types'
 
 /**
  * Checks if the provided value is a valid config.
@@ -11,7 +11,12 @@ import { Config, ConfigOrigin, UserConfig } from './types'
 export function isConfig(value: unknown): value is Config {
   if (!isObject(value)) return false
   const { origin, ...userConfig } = value
-  return isUserConfig(userConfig) && isConfigOrigin(origin)
+  try {
+    validateUserConfig(userConfig)
+  } catch {
+    return false
+  }
+  return isConfigOrigin(origin)
 }
 
 /**
@@ -20,9 +25,7 @@ export function isConfig(value: unknown): value is Config {
  * @returns `true` if the value is a valid config origin, `false` otherwise.
  */
 export function isConfigOrigin(value: unknown): value is ConfigOrigin {
-  return (
-    typeof value === 'string' && ['default', 'file', 'function'].includes(value)
-  )
+  return typeof value === 'string' && ['default', 'user'].includes(value)
 }
 
 /**
@@ -55,32 +58,6 @@ export function isObject(value: unknown): value is Record<string, unknown> {
     value !== undefined &&
     !Array.isArray(value)
   )
-}
-
-/**
- * Checks if the provided value is a valid user config.
- * @param value The value to check.
- * @returns `true` if the value is a valid user config, `false` otherwise.
- */
-export function isUserConfig(value: unknown): value is UserConfig {
-  // check if the value is an object
-  if (!isObject(value)) return false
-
-  const keysInDefaultConfig = Object.keys(defaultConfig)
-  const keysInUserConfig = Object.keys(value)
-
-  // check if the user config has too many properties
-  if (keysInUserConfig.length > keysInDefaultConfig.length) return false
-
-  // check if the user config has any invalid properties
-  let foundInvalidKey = false
-  keysInUserConfig.forEach((key) => {
-    if (!keysInDefaultConfig.includes(key)) {
-      foundInvalidKey = true
-    }
-  })
-
-  return !foundInvalidKey
 }
 
 /**

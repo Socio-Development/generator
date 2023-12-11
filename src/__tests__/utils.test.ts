@@ -1,11 +1,10 @@
-import defaultConfig from '../defaultConfig'
+import { defaultConfig } from '../constants'
 import { Config } from '../types'
 import {
   isConfig,
   isConfigOrigin,
   isDirectory,
   isFile,
-  isUserConfig,
   parsePath,
   pathEndsWithDir,
   pathExists,
@@ -14,24 +13,25 @@ import {
 describe('isConfig', () => {
   it('should return true for valid configs', () => {
     expect(isConfig({ origin: 'default' })).toBe(true)
-    expect(isConfig({ origin: 'file', safetyDirName: '_custom' })).toBe(true)
-    expect(isConfig({ createDir: false, origin: 'function' })).toBe(true)
+    expect(isConfig({ origin: 'user', safetyDirName: '_custom' })).toBe(true)
+    expect(isConfig({ createDir: false, origin: 'user' })).toBe(true)
   })
 
   it('should return false if the origin property is missing', () => {
+    expect(isConfig(23)).toBe(false)
     expect(isConfig({})).toBe(false)
     expect(isConfig({ origin: null })).toBe(false)
     expect(isConfig({ origin: undefined })).toBe(false)
     expect(isConfig({ origin: '' })).toBe(false)
     expect(isConfig({ origin: 'foo' })).toBe(false)
+    expect(isConfig({ origin: 'user', safeMode: 'test' })).toBe(false)
   })
 })
 
 describe('isConfigOrigin', () => {
   it('should return true for valid config origins', () => {
     expect(isConfigOrigin('default')).toBe(true)
-    expect(isConfigOrigin('file')).toBe(true)
-    expect(isConfigOrigin('function')).toBe(true)
+    expect(isConfigOrigin('user')).toBe(true)
   })
 
   it('should return false for invalid config origins', () => {
@@ -39,6 +39,8 @@ describe('isConfigOrigin', () => {
     expect(isConfigOrigin('foo')).toBe(false)
     expect(isConfigOrigin('root')).toBe(false)
     expect(isConfigOrigin('project')).toBe(false)
+    expect(isConfigOrigin('file')).toBe(false)
+    expect(isConfigOrigin('function')).toBe(false)
   })
 })
 
@@ -71,26 +73,6 @@ describe('isFile', () => {
 
   it('should throw an error if the path is empty', () => {
     expect(() => isFile('')).toThrow()
-  })
-})
-
-describe('isUserConfig', () => {
-  it('should return true for valid user configs', () => {
-    expect(isUserConfig({})).toBe(true)
-    expect(isUserConfig(defaultConfig)).toBe(true)
-  })
-
-  it('should return false for invalid user configs', () => {
-    expect(isUserConfig({ origin: 'default' })).toBeFalsy()
-    expect(isUserConfig({ ...defaultConfig, invalidProp: true })).toBe(false)
-    expect(isUserConfig(() => 'hello')).toBe(false)
-    expect(isUserConfig([])).toBe(false)
-    expect(isUserConfig(null)).toBe(false)
-    expect(isUserConfig(undefined)).toBe(false)
-    expect(isUserConfig('hello')).toBe(false)
-    expect(isUserConfig(23)).toBe(false)
-    expect(isUserConfig(true)).toBe(false)
-    expect(isUserConfig({ invalidProp: 'Hi, I am invalid!' })).toBe(false)
   })
 })
 

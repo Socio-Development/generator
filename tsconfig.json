@@ -9,7 +9,7 @@
     "target": "ES2022",
     "verbatimModuleSyntax": false,
     /* Strictness */
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": false,
     "strict": true,
     /* Transpiling with TypeScript */
     "module": "CommonJS",

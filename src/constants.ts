@@ -1,6 +1,7 @@
+import { resolve } from 'path'
 import { UserConfigRequired } from './types'
 
-export default {
+export const defaultConfig: UserConfigRequired = {
   createDir: true,
   dotPrefixWhitelist: {
     dirs: ['.github', '.husky', '.vscode'],
@@ -8,4 +9,7 @@ export default {
   },
   safeMode: true,
   safetyDirName: '_generated',
-} satisfies UserConfigRequired
+}
+
+export const userConfigName = 'generator.config.ts'
+export const userConfigPath = resolve('.', userConfigName)

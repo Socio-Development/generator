@@ -130,6 +130,5 @@ dist
 .pnp.*
 
 # Development environment
-generator.config.ts
 sandboxes
 sandbox.ts
