@@ -36,6 +36,38 @@ describe('mergeConfig', () => {
       origin: 'user',
     })
   })
+
+  it('should merge whitelists', () => {
+    const originalValue = defaultConfig.dotPrefixWhitelist
+    const mockValue = {
+      dirs: ['.github', '.vscode'],
+      files: ['.env', '.gitignore'],
+    }
+    // mock defaultConfig.dotPrefixWhitelist
+    defaultConfig.dotPrefixWhitelist = mockValue
+
+    const userConfig: UserConfig = {
+      dotPrefixWhitelist: {
+        dirs: ['.test'],
+        files: ['.env', '.test'],
+      },
+    }
+
+    const config = mergeConfig(userConfig)
+
+    expect(config).toStrictEqual({
+      ...defaultConfig,
+      ...userConfig,
+      origin: 'user',
+      dotPrefixWhitelist: {
+        dirs: ['.github', '.test', '.vscode'],
+        files: ['.env', '.gitignore', '.test'],
+      },
+    })
+
+    // reset defaultConfig.dotPrefixWhitelist
+    defaultConfig.dotPrefixWhitelist = originalValue
+  })
 })
 
 describe('validateUserConfig', () => {

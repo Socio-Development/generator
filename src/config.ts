@@ -1,5 +1,5 @@
 import { defaultConfig } from './constants'
-import { Config, ConfigOrigin, UserConfig } from './types'
+import { Config, UserConfig } from './types'
 import { isObject } from './utils'
 
 /**
@@ -17,36 +17,61 @@ export function defineConfig(config: Partial<UserConfig>): Partial<UserConfig> {
  * @returns A config object.
  */
 export function mergeConfig(userConfig: UserConfig): Config {
-  let origin: ConfigOrigin | null = null
+  let finalConfig: Config = {
+    ...defaultConfig,
+    origin: 'default',
+  }
 
   // check if the user config is empty
   if (Object.keys(userConfig).length === 0) {
-    origin = 'default'
+    return finalConfig
   }
 
   // check if the user config is identical to the default config
   if (JSON.stringify(userConfig) === JSON.stringify(defaultConfig)) {
-    origin = 'default'
+    return finalConfig
   }
 
-  if (origin === 'default') {
-    return {
-      ...defaultConfig,
-      origin,
+  const { dotPrefixWhitelist, ...restOfUserConfig } = userConfig
+
+  finalConfig = {
+    ...finalConfig,
+    ...restOfUserConfig,
+    origin: 'user',
+  }
+
+  if (dotPrefixWhitelist) {
+    if (dotPrefixWhitelist.dirs) {
+      // find strings in user config that are not in default config
+      const dirsToAdd = dotPrefixWhitelist.dirs.filter(
+        (dir) => !finalConfig.dotPrefixWhitelist.dirs.includes(dir),
+      )
+      // add strings to final config
+      finalConfig.dotPrefixWhitelist.dirs.push(...dirsToAdd)
+      // sort final config
+      finalConfig.dotPrefixWhitelist.dirs.sort((a, b) => a.localeCompare(b))
+      // remove duplicates
+      finalConfig.dotPrefixWhitelist.dirs = Array.from(
+        new Set(finalConfig.dotPrefixWhitelist.dirs),
+      )
+    }
+    if (dotPrefixWhitelist.files) {
+      // find strings in user config that are not in default config
+      const filesToAdd = dotPrefixWhitelist.files.filter(
+        (file) => !finalConfig.dotPrefixWhitelist.files.includes(file),
+      )
+      // add strings to final config
+      finalConfig.dotPrefixWhitelist.files.push(...filesToAdd)
+      // sort final config
+      finalConfig.dotPrefixWhitelist.files.sort((a, b) => a.localeCompare(b))
+      // remove duplicates
+      finalConfig.dotPrefixWhitelist.files = Array.from(
+        new Set(finalConfig.dotPrefixWhitelist.files),
+      )
     }
   }
 
-  origin = 'user'
-
-  return {
-    ...defaultConfig,
-    ...userConfig,
-    dotPrefixWhitelist: {
-      ...defaultConfig.dotPrefixWhitelist,
-      ...userConfig.dotPrefixWhitelist,
-    },
-    origin,
-  }
+  return finalConfig
 }
 
 /**
