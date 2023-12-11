@@ -23,7 +23,7 @@ export function loadConfig(): UserConfig {
       const userConfigImport = require(userConfigPath)
       const userConfig = userConfigImport.default
 
-      Logger.add(`User config: ${JSON.stringify(userConfig, null, 2)}`)
+      Logger.add(`User config: ${JSON.stringify(userConfig)}`)
 
       try {
         validateUserConfig(userConfig)
