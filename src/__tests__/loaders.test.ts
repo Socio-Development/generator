@@ -1,76 +1,72 @@
-import { existsSync, renameSync, rmSync, writeFileSync } from 'fs'
-import { resolve } from 'path'
-import { defaultConfig, userConfigPath } from '../constants'
+import fs from 'fs'
+import { userConfigPath } from '../constants'
 import { loadConfig } from '../loaders'
-import { UserConfig } from '../types'
+import { Logger } from '../logger'
 
 describe('loadConfig', () => {
-  const tmpName = 'orig_generator.config.ts'
-  const rootPath = resolve('.')
-  const tmpPath = resolve(rootPath, tmpName)
-
-  const createConfig = (userConfig: any = {}) => {
-    const template: string[] = [
-      'import { defineConfig } from "./src"',
-      `export default defineConfig(${JSON.stringify(userConfig, null, 2)})`,
-    ]
-
-    // remove double quotes from keys
-    if (template[1] !== undefined)
-      template[1] = template[1].replace(/"([^(")"]+)":/g, '$1:')
-
-    const code = template.join('\n')
-
-    writeFileSync(userConfigPath, code, 'utf8')
-  }
-
-  const deleteConfig = () => {
-    if (existsSync(userConfigPath)) {
-      rmSync(userConfigPath)
-    }
-  }
-
-  afterAll(() => {
-    // check if temporary config file exists
-    if (existsSync(tmpPath)) {
-      // restore config file
-      renameSync(tmpPath, userConfigPath)
-    }
-  })
-
-  beforeAll(() => {
-    // check if config file exists
-    if (existsSync(userConfigPath)) {
-      // temporarily rename config file
-      renameSync(userConfigPath, tmpPath)
-    }
-  })
-
-  beforeEach(() => {
-    deleteConfig()
+  afterEach(() => {
     jest.resetModules()
   })
 
-  it('should load the default config if no config file is found', () => {
-    const config = loadConfig()
-    expect(config).toStrictEqual(defaultConfig)
+  beforeEach(() => {
+    Logger.reset()
+    jest.restoreAllMocks()
   })
 
-  it('should load the default config if the user config is invalid', () => {
-    const input = {
-      invalidProp: 'Hi, I am invalid!',
-    }
-    createConfig(input)
-    const config = loadConfig()
-    expect(config).toStrictEqual(defaultConfig)
+  it('should load an empty config if no config file is found', () => {
+    const mockExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(false)
+
+    const expected = {}
+    const actual = loadConfig()
+
+    expect(mockExistsSync).toHaveBeenCalledWith(userConfigPath)
+    expect(actual).toStrictEqual(expected)
   })
 
-  it('should load the user config if available', () => {
-    const input: UserConfig = {
+  it('should load the user config if a config file is found', () => {
+    const mockExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(true)
+
+    const expected = {
       createDir: false,
     }
-    createConfig(input)
-    const config = loadConfig()
-    expect(config).toStrictEqual(input)
+
+    jest.doMock(userConfigPath, () => ({
+      default: expected,
+    }))
+
+    const actual = loadConfig()
+
+    expect(mockExistsSync).toHaveBeenCalledWith(userConfigPath)
+    expect(actual).toStrictEqual(expected)
+  })
+
+  it('should load an empty config if the user config is invalid', () => {
+    const mockExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(true)
+
+    jest.doMock(userConfigPath, () => ({
+      default: {
+        invalidProp: 'test',
+      },
+    }))
+
+    const expected = {}
+    const actual = loadConfig()
+
+    expect(mockExistsSync).toHaveBeenCalledWith(userConfigPath)
+    expect(actual).toStrictEqual(expected)
+  })
+
+  it('should load an empty config if an unexpected error occurs', () => {
+    const mockExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(true)
+
+    jest.doMock(userConfigPath, () => {
+      throw new Error('Unexpected error')
+    })
+
+    const expected = {}
+    const actual = loadConfig()
+
+    expect(mockExistsSync).toHaveBeenCalledWith(userConfigPath)
+    expect(actual).toStrictEqual(expected)
   })
 })
