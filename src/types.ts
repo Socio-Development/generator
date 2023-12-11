@@ -27,6 +27,7 @@ export type GeneratorOptions = {
 }
 
 export type PathPreparationResult = {
+  finalDirPath: string
   missingPaths: string[]
 }
 

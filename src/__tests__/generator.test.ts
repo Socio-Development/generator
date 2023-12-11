@@ -1,20 +1,48 @@
-import { defaultConfig } from '../constants'
+import fs from 'fs'
+import { resolve } from 'path'
+import { mergeConfig } from '../config'
 import { preparePath } from '../generator'
-import { Config } from '../types'
+import { Config, UserConfig } from '../types'
 
 describe('preparePath', () => {
-  const config: Config = {
-    ...defaultConfig,
-    origin: 'default',
-  }
+  const getConfig = (userOptions: UserConfig = {}): Config =>
+    mergeConfig(userOptions)
 
   it('should return an empty array if the path exists', () => {
-    const res = preparePath(config, 'src/__tests__/generator.test.ts')
+    jest.spyOn(fs, 'existsSync').mockReturnValue(true)
+
+    const config = getConfig()
+    const path = 'src/types/test.ts'
+    const res = preparePath(config, path)
+
     expect(res.missingPaths).toEqual([])
   })
 
   it('should return an array of missing paths if the path does not exist', () => {
-    const res = preparePath(config, 'src/__tests__/missingPath/test.ts')
-    expect(res.missingPaths).toEqual(['src/__tests__/missingPath'])
+    jest.spyOn(fs, 'existsSync').mockReturnValue(false)
+
+    const config = getConfig()
+    const path = 'src/types/test.ts'
+    const res = preparePath(config, path)
+
+    res.missingPaths.map((path) => path.replace(resolve('.'), ''))
+
+    expect(res.missingPaths).toEqual([
+      'src/types/_generated',
+      'src/types',
+      'src',
+    ])
+  })
+
+  it('should omit safetyDirName if safe mode is off', () => {
+    jest.spyOn(fs, 'existsSync').mockReturnValue(false)
+
+    const config = getConfig({ safeMode: false })
+    const path = 'src/types/test.ts'
+    const res = preparePath(config, path)
+
+    res.missingPaths.map((path) => path.replace(resolve('.'), ''))
+
+    expect(res.missingPaths).toEqual(['src/types', 'src'])
   })
 })

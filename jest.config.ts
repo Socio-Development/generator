@@ -22,7 +22,7 @@ export default {
     '!src/**/types.ts',
     '!src/controller.ts',
     '!src/index.ts',
-    '!src/sandbox.ts',
+    '!src/sandbox/**',
   ],
 
   // The directory where Jest should output its coverage files
@@ -197,7 +197,7 @@ export default {
   // verbose: undefined,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
-  watchPathIgnorePatterns: ['src/sandbox.ts'],
+  watchPathIgnorePatterns: ['src/sandbox', 'src/sandbox.ts'],
 
   // Whether to use watchman for file crawling
   // watchman: true,

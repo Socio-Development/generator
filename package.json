@@ -5,7 +5,7 @@
   "author": "CasperSocio",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/sandbox.ts",
+    "dev": "ts-node src/sandbox/main.ts",
     "prepare": "husky install",
     "test": "jest",
     "test:ci": "jest --ci --coverage=false",

@@ -130,5 +130,6 @@ dist
 .pnp.*
 
 # Development environment
+sandbox
 sandboxes
 sandbox.ts

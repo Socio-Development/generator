@@ -32,7 +32,7 @@
     "node_modules",
     "sandboxes",
     "src/__tests__",
-    "src/sandbox.ts"
+    "src/sandbox"
   ],
   "include": [
     "src/**/*.ts"
