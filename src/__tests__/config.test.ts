@@ -39,6 +39,25 @@ describe('mergeConfig', () => {
 })
 
 describe('validateUserConfig', () => {
+  it('should check every available option property', () => {
+    // This test is here to make sure that we don't forget to add new options to the validation.
+
+    const userConfig: UserConfig = {
+      createDir: true,
+      dotPrefixWhitelist: {
+        dirs: ['test'],
+        files: ['test'],
+      },
+      safeMode: false,
+      safetyDirName: '_ai_generated',
+    }
+
+    const expected = Object.keys(defaultConfig).length
+    const actual = Object.keys(validateUserConfig(userConfig)).length
+
+    expect(actual).toEqual(expected)
+  })
+
   it('should throw an error if the provided config is not an object', () => {
     const userConfig = 'test'
     expect(() => validateUserConfig(userConfig)).toThrow(
