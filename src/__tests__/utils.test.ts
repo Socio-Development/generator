@@ -18,11 +18,13 @@ describe('isConfig', () => {
   })
 
   it('should return false if the origin property is missing', () => {
+    expect(isConfig(23)).toBe(false)
     expect(isConfig({})).toBe(false)
     expect(isConfig({ origin: null })).toBe(false)
     expect(isConfig({ origin: undefined })).toBe(false)
     expect(isConfig({ origin: '' })).toBe(false)
     expect(isConfig({ origin: 'foo' })).toBe(false)
+    expect(isConfig({ origin: 'user', safeMode: 'test' })).toBe(false)
   })
 })
 
