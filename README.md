@@ -37,8 +37,7 @@ export type IconName = (typeof iconNames)[number];
 
 generate({
   code: codeToGenerate,
-  fileName: 'icons',
-  language: 'typescript',
+  file: 'icons.ts',
   path: 'src/types'
 });
 ```

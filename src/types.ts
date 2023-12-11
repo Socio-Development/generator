@@ -11,18 +11,17 @@ export type ConfigOrigin = (typeof configOrigins)[number]
 export type GeneratorOptions = {
   /**
    * The code to put in the generated file.
+   * @example 'export const icons = { ... }'
    */
   code: string
   /**
-   * Name of the file to generate.
+   * The file to generate.
+   * @example 'icons.ts'
    */
-  fileName: string
-  /**
-   * The code language of the generated file.
-   */
-  language: SupportedLanguage
+  file: string
   /**
    * The path to generate the file in.
+   * @example 'src/types'
    */
   path: string
 }

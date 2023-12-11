@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from 'fs'
 import { join, resolve } from 'path'
 import { mergeConfig } from './config'
 import { loadConfig } from './loaders'
-import { Config, GeneratorOptions, SupportedLanguage } from './types'
+import { Config, GeneratorOptions } from './types'
 import { pathEndsWithDir, pathExists } from './utils'
 
 export default class GeneratorController {
@@ -14,19 +14,16 @@ export default class GeneratorController {
    * Otherwise, the default config will be used.
    */
   private _config: Config
-  /** Name of the file to generate. */
-  private _fileName: string
-  /** The code language of the generated file. */
-  private _language: SupportedLanguage
+  /** The file to generate. */
+  private _file: string
   /** The path to generate the file in. */
   private _relativePath: string
   /** Project root path. */
   private _rootPath: string
 
-  constructor({ code, fileName, language, path }: GeneratorOptions) {
+  constructor({ code, file, path }: GeneratorOptions) {
     this._code = code
-    this._fileName = fileName
-    this._language = language
+    this._file = file
     this._relativePath = path
     this._rootPath = resolve('.')
 
@@ -65,21 +62,6 @@ export default class GeneratorController {
       throw new Error(
         `[generator] Failed to create directory: ${path}. This is most likely caused by a bug in the generator.`,
       )
-    }
-  }
-
-  /**
-   * The file extension for the generated file.
-   * @throws If the code language is not supported.
-   */
-  private get _fileExtension(): string {
-    switch (this._language) {
-      case 'javascript':
-        return 'js'
-      case 'typescript':
-        return 'ts'
-      default:
-        throw new Error(`[generator] Unsupported language: ${this._language}`)
     }
   }
 
@@ -124,17 +106,15 @@ export default class GeneratorController {
    * If safe mode is enabled, the target path will be appended with a directory to prevent overwriting code.
    */
   private get _targetPath(): string {
-    const file = `${this._fileName}.${this._fileExtension}`
-
     if (this._config.safeMode) {
       return join(
         this._rootPath,
         this._relativePath,
         this._config.safetyDirName,
-        file,
+        this._file,
       )
     }
-    return join(this._rootPath, this._relativePath, file)
+    return join(this._rootPath, this._relativePath, this._file)
   }
 
   /**
