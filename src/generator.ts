@@ -1,3 +1,4 @@
+import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { join, resolve } from 'path'
 import { mergeConfig } from './config'
 import { loadConfig } from './loaders'
@@ -11,17 +12,58 @@ export function generate(options: GeneratorOptions): void {
   const config = mergeConfig(loadConfig())
   const pathStatus = preparePath(config, options.path)
 
-  console.log(JSON.stringify({ config, pathStatus }, null, 2))
+  if (pathStatus.missingPaths.length > 0) {
+    if (config.createDir) {
+      generateDirPaths(config, pathStatus.missingPaths)
+    } else {
+      throw new Error(
+        `[generator] Missing paths: "${
+          pathStatus.missingPaths[pathStatus.missingPaths.length - 1]
+        }". Having createDir set to false will cause an error if the path does not exist.`,
+      )
+    }
+  } else {
+    Logger.add(`No missing paths`)
+  }
+
+  const filePath = join(pathStatus.finalDirPath, options.file)
+  if (!existsSync(pathStatus.finalDirPath)) {
+    throw new Error(
+      `[generator] Path does not exist: ${pathStatus.finalDirPath}. This is most likely caused by a bug in the generator.`,
+    )
+  }
+
+  Logger.add(`Generating file: ${filePath}`)
+  Logger.add(`Writing code: ${options.code}`)
+  writeFileSync(filePath, options.code, 'utf8')
 
   Logger.endProcess(`DONE`)
   Logger.print()
 }
 
-export function generateDirPath(path: string): void {
-  Logger.startProcess(`Generating directory path: ${path}`)
+export function generateDirPaths(config: Config, paths: string[]): void {
+  Logger.startProcess(`Generating directory paths...`)
 
-  Logger.add('Path generation not implemented yet')
-  // check if path exists
+  if (!config.createDir) {
+    throw new Error(
+      `[generator] Cannot generate directory path if createDir is false.`,
+    )
+  }
+
+  // sort paths by length from shortest to longest
+  paths.sort((a, b) => a.length - b.length)
+
+  paths.forEach((path) => {
+    // check if path exists
+    if (existsSync(path)) {
+      throw new Error(
+        `[generator] Cannot generate directory path if it already exists. This is most likely caused by a bug in the generator.`,
+      )
+    }
+
+    Logger.add(`Creating directory path: ${path}`)
+    mkdirSync(path)
+  })
 
   Logger.endProcess(`Directory path generated`)
 }
@@ -38,7 +80,8 @@ export function preparePath(
 ): PathPreparationResult {
   Logger.startProcess(`[generator] Preparing path: ${path}`)
 
-  const result: PathPreparationResult = {
+  const res: PathPreparationResult = {
+    finalDirPath: '',
     missingPaths: [],
   }
 
@@ -56,17 +99,25 @@ export function preparePath(
     Logger.add(`Removed file from path: ${removedFile}`)
   }
 
+  if (config.safeMode) {
+    Logger.add(`Safe mode enabled. Adding safety directory to path`)
+    // add safety directory to the end of array
+    arrPath.push(config.safetyDirName)
+  }
+
+  res.finalDirPath = join(rootPath, ...arrPath)
+
   // check if the path exists
   while (arrPath.length > 0) {
     const currentPath = join(rootPath, ...arrPath)
     Logger.add(`Checking path: ${join(...arrPath)}`)
     if (!pathExists(currentPath)) {
       Logger.add(`Flagging missing path: ${join(...arrPath)}`)
-      result.missingPaths.push(join(...arrPath))
+      res.missingPaths.push(join(...arrPath))
     }
     arrPath.pop()
   }
 
   Logger.endProcess(`[generator] Path prepared`)
-  return result
+  return res
 }
