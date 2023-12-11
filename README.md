@@ -1,5 +1,7 @@
 <p align="center">
+<a href="https://github.com/Socio-Development/generator">
   <img src="https://raw.githubusercontent.com/Socio-Development/generator/66b1ed38bb1f886c5250e69edf8885b3c4656971/docs/assets/socio-full.svg" alt="Socio logo" width="400px">
+</a>
 </p>
 <br />
 <p align="center">
@@ -19,6 +21,8 @@ Run `npm i -D @socio-development/generator`
 
 ### Example
 
+The following example shows how you can generate type declarations after crawling your file system for icon asset names.
+
 ```ts
 // ./scripts/generateIconTypes.ts
 import { generate } from '@socio-development/generator';
@@ -36,9 +40,9 @@ export type IconName = (typeof iconNames)[number];
 `
 
 generate({
-  code: codeToGenerate,
-  file: 'icons.ts',
-  path: 'src/types'
+  code: codeToGenerate, // The code you wish to generate
+  file: 'icons.ts', // The file to be generated
+  path: 'src/types' // Where to put the generated file
 });
 ```
 
@@ -51,7 +55,34 @@ export const iconNames = ['add', 'delete'] as const;
 export type IconName = (typeof iconNames)[number];
 ```
 
+You can then trigger the generator by running `npx ts-node scripts/generateIconTypes.ts`. Furthermore, you can trigger the script everytime you start your development environment:
+
+```json
+// package.json
+{
+  "scripts": {
+    "dev": "npm run generate && ts-node src/main.ts",
+    "generate": "ts-node scripts/generateIconTypes.ts"
+  }
+}
+```
+
 # Configuration options
+
+You can change the global generator config by adding `generator.config.(js|ts)` to the root of your project.
+
+```ts
+// ./generator.config.ts
+import { defineConfig } from '@socio-development/generator'
+
+export default defineConfig({
+  createDir: true, // Allows the generator to create directories
+  safeMode: true, // Ensures that all files are generated within a protected directory
+  safetyDirName: '_generated' // The name of the protected directory
+})
+```
+
+All generator config options are described in detail below.
 
 ## Create Directory
 
