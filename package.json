@@ -1,6 +1,6 @@
 {
   "name": "@socio-development/generator",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "A code generator that provides a reliable way of creating files in your project. Excellent for generating type definitions.",
   "author": "CasperSocio",
   "scripts": {
