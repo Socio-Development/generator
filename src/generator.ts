@@ -33,9 +33,12 @@ export function generate(options: GeneratorOptions): void {
     )
   }
 
+  // prepare code
+  const preparedCode = prepareCode(options.code)
+
   Logger.add(`Generating file: ${filePath}`)
-  Logger.add(`Writing code: ${options.code}`)
-  writeFileSync(filePath, options.code, 'utf8')
+  Logger.add(`Writing code...`)
+  writeFileSync(filePath, preparedCode, 'utf8')
 
   Logger.endProcess(`DONE`)
   Logger.print()
@@ -66,6 +69,30 @@ export function generateDirPaths(config: Config, paths: string[]): void {
   })
 
   Logger.endProcess(`Directory path generated`)
+}
+
+/**
+ * Prepares code for file generation.
+ * @param data The code to prepare.
+ * @returns The prepared code.
+ */
+export function prepareCode(data: string): string {
+  Logger.startProcess(`Preparing code...`)
+
+  let res = data
+
+  // remove newlines from the beginning and end of the code
+  if (res.startsWith('\n')) {
+    Logger.add(`Removing newline from the beginning of the code`)
+    res = res.slice(1)
+  }
+  if (res.endsWith('\n')) {
+    Logger.add(`Removing newline from the end of the code`)
+    res = res.slice(0, -1)
+  }
+
+  Logger.endProcess(`Preparing code: DONE`)
+  return res
 }
 
 /**
