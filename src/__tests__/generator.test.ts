@@ -1,8 +1,41 @@
 import fs from 'fs'
 import { resolve } from 'path'
 import { mergeConfig } from '../config'
-import { preparePath } from '../generator'
+import { prepareCode, preparePath } from '../generator'
 import { Config, UserConfig } from '../types'
+
+const codeInput = `
+const greeting = 'Hello World!'
+`
+const codeInputNewline = `
+const greeting = 'Hello World!'
+
+`
+
+describe('prepareCode', () => {
+  it('should trim the input string and return it', () => {
+    const expectedBefore = JSON.stringify("\nconst greeting = 'Hello World!'\n")
+    const expectedAfter = JSON.stringify("const greeting = 'Hello World!'")
+
+    const actualBefore = JSON.stringify(codeInput)
+    const actualAfter = JSON.stringify(prepareCode(codeInput))
+
+    expect(actualBefore).toBe(expectedBefore)
+    expect(actualAfter).toBe(expectedAfter)
+  })
+  it('should not remove newlines intentionally added by the user', () => {
+    const expectedBefore = JSON.stringify(
+      "\nconst greeting = 'Hello World!'\n\n",
+    )
+    const expectedAfter = JSON.stringify("const greeting = 'Hello World!'\n")
+
+    const actualBefore = JSON.stringify(codeInputNewline)
+    const actualAfter = JSON.stringify(prepareCode(codeInputNewline))
+
+    expect(actualBefore).toBe(expectedBefore)
+    expect(actualAfter).toBe(expectedAfter)
+  })
+})
 
 describe('preparePath', () => {
   const getConfig = (userOptions: UserConfig = {}): Config =>
