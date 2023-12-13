@@ -1,6 +1,6 @@
 {
   "name": "@socio-development/generator",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "A code generator that provides a reliable way of creating files in your project. Excellent for generating type definitions.",
   "author": "CasperSocio",
   "scripts": {
@@ -14,13 +14,12 @@
   "files": [
     "dist"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.js"
-    }
-  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Socio-Development/generator.git"
