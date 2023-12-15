@@ -2,7 +2,7 @@
   "name": "@socio-development/generator",
   "version": "0.1.0-alpha.3",
   "description": "A code generator that provides a reliable way of creating files in your project. Excellent for generating type definitions.",
-  "author": "CasperSocio",
+  "author": "CasperSocio (https://github.com/CasperSocio)",
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/sandbox/main.ts",
@@ -30,6 +30,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@socio-development/logger": "^0.1.0-alpha.0",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.4",
     "husky": "^8.0.3",

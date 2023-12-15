@@ -20,7 +20,6 @@ export default {
   collectCoverageFrom: [
     'src/*',
     '!src/**/types.ts',
-    '!src/controller.ts',
     '!src/index.ts',
     '!src/sandbox/**',
   ],
