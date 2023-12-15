@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import { validateUserConfig } from './config'
 import { userConfigName, userConfigPath } from './constants'
-import { Logger } from './logger'
+import logger from './log'
 import { UserConfig } from './types'
 
 /**
@@ -9,43 +9,43 @@ import { UserConfig } from './types'
  * @returns The loaded config.
  */
 export function loadConfig(): UserConfig {
-  Logger.startProcess('Loading config...')
+  logger.group('Loading config...')
 
   let config: UserConfig = {}
 
   const userConfigExists = existsSync(userConfigPath)
   if (userConfigExists) {
-    Logger.add(`Config file found at: ${userConfigPath}`)
+    logger.add(`Config file found at: ${userConfigPath}`)
 
     try {
-      Logger.add('Loading user config file...')
+      logger.add('Loading user config file...')
 
       const userConfigImport = require(userConfigPath)
       const userConfig = userConfigImport.default
 
-      Logger.add(`User config: ${JSON.stringify(userConfig)}`)
+      logger.info(`User config: ${JSON.stringify(userConfig)}`)
 
       try {
         validateUserConfig(userConfig)
-        Logger.add('Using user config')
+        logger.add('Using user config')
         config = userConfig
       } catch (err) {
-        Logger.add('Invalid config file')
+        logger.error('Invalid config file')
         if (err instanceof Error) {
-          Logger.add(err.message)
+          logger.error(err.message)
         }
       }
     } catch (err) {
-      Logger.add(`Something went wrong while loading ${userConfigName}`)
+      logger.error(`Something went wrong while loading ${userConfigName}`)
       if (err instanceof Error) {
-        Logger.add(err.message)
+        logger.error(err.message)
       }
     }
   } else {
-    Logger.add('No config file found')
+    logger.add('No config file found')
   }
 
-  Logger.endProcess('Loading config: DONE')
+  logger.groupEnd('Loading config: DONE')
 
   return config
 }

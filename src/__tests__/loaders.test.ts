@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { userConfigPath } from '../constants'
 import { loadConfig } from '../loaders'
-import { Logger } from '../logger'
+import logger from '../log'
 
 describe('loadConfig', () => {
   afterEach(() => {
@@ -9,7 +9,7 @@ describe('loadConfig', () => {
   })
 
   beforeEach(() => {
-    Logger.reset()
+    logger.clear()
     jest.restoreAllMocks()
   })
 

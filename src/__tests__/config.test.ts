@@ -93,21 +93,21 @@ describe('validateUserConfig', () => {
   it('should throw an error if the provided config is not an object', () => {
     const userConfig = 'test'
     expect(() => validateUserConfig(userConfig)).toThrow(
-      '[generator] User config must be an object. Make sure you are using `defineConfig()` to define your config.',
+      'User config must be an object. Make sure you are using `defineConfig()` to define your config.',
     )
   })
 
   it('should throw an error if the provided config is null', () => {
     const userConfig = null
     expect(() => validateUserConfig(userConfig)).toThrow(
-      '[generator] User config must be an object. Make sure you are using `defineConfig()` to define your config.',
+      'User config must be an object. Make sure you are using `defineConfig()` to define your config.',
     )
   })
 
   it('should throw an error if the provided config is undefined', () => {
     const userConfig = undefined
     expect(() => validateUserConfig(userConfig)).toThrow(
-      '[generator] User config must be an object. Make sure you are using `defineConfig()` to define your config.',
+      'User config must be an object. Make sure you are using `defineConfig()` to define your config.',
     )
   })
 
@@ -130,7 +130,7 @@ describe('validateUserConfig', () => {
       test9: true,
     }
     expect(() => validateUserConfig(userConfig)).toThrow(
-      '[generator] User config has too many properties.',
+      'User config has too many properties.',
     )
   })
 
@@ -139,7 +139,7 @@ describe('validateUserConfig', () => {
       test: true,
     }
     expect(() => validateUserConfig(userConfig)).toThrow(
-      '[generator] User config has invalid properties: test.',
+      'User config has invalid properties: test.',
     )
   })
 
@@ -149,7 +149,7 @@ describe('validateUserConfig', () => {
         createDir: 'test',
       }
       expect(() => validateUserConfig(userConfig)).toThrow(
-        '[generator] User config property `createDir` must be a boolean.',
+        'User config property `createDir` must be a boolean.',
       )
     })
   })
@@ -160,7 +160,7 @@ describe('validateUserConfig', () => {
         dotPrefixWhitelist: 'test',
       }
       expect(() => validateUserConfig(userConfig)).toThrow(
-        '[generator] User config property `dotPrefixWhitelist` must be an object.',
+        'User config property `dotPrefixWhitelist` must be an object.',
       )
     })
 
@@ -172,7 +172,7 @@ describe('validateUserConfig', () => {
           },
         }
         expect(() => validateUserConfig(userConfig)).toThrow(
-          '[generator] User config property `dotPrefixWhitelist.dirs` must be an array.',
+          'User config property `dotPrefixWhitelist.dirs` must be an array.',
         )
       })
 
@@ -183,7 +183,7 @@ describe('validateUserConfig', () => {
           },
         }
         expect(() => validateUserConfig(userConfig)).toThrow(
-          '[generator] User config property `dotPrefixWhitelist.dirs` must only contain strings.',
+          'User config property `dotPrefixWhitelist.dirs` must only contain strings.',
         )
       })
     })
@@ -196,7 +196,7 @@ describe('validateUserConfig', () => {
           },
         }
         expect(() => validateUserConfig(userConfig)).toThrow(
-          '[generator] User config property `dotPrefixWhitelist.files` must be an array.',
+          'User config property `dotPrefixWhitelist.files` must be an array.',
         )
       })
 
@@ -207,7 +207,7 @@ describe('validateUserConfig', () => {
           },
         }
         expect(() => validateUserConfig(userConfig)).toThrow(
-          '[generator] User config property `dotPrefixWhitelist.files` must only contain strings.',
+          'User config property `dotPrefixWhitelist.files` must only contain strings.',
         )
       })
     })
@@ -219,7 +219,7 @@ describe('validateUserConfig', () => {
         safeMode: 'test',
       }
       expect(() => validateUserConfig(userConfig)).toThrow(
-        '[generator] User config property `safeMode` must be a boolean.',
+        'User config property `safeMode` must be a boolean.',
       )
     })
   })
@@ -230,7 +230,7 @@ describe('validateUserConfig', () => {
         safetyDirName: true,
       }
       expect(() => validateUserConfig(userConfig)).toThrow(
-        '[generator] User config property `safetyDirName` must be a string.',
+        'User config property `safetyDirName` must be a string.',
       )
     })
   })
