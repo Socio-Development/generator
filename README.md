@@ -27,12 +27,14 @@ The following example shows how you can generate type declarations after crawlin
 // ./scripts/generateIconTypes.ts
 import { generate } from '@socio-development/generator';
 
+// Crawls a directory and extracts all icon names
 function crawlIconAssetsAndExtractNames(): string[] {
   // your code here
 }
 
-const iconNames = crawlIconAssetsAndExtractNames(); // ['add', 'delete']
+const iconNames = crawlIconAssetsAndExtractNames(); // ['add', 'delete', 'house']
 
+// Create a template literal to be generated as code
 const codeToGenerate = `
 export const iconNames = ['${ iconNames.join("', '") }'] as const;
 
@@ -50,7 +52,7 @@ This script will generate a file `./src/types/_generated/icons.ts` containing th
 
 ```ts
 // ./src/types/_generated/icons.ts
-export const iconNames = ['add', 'delete'] as const;
+export const iconNames = ['add', 'delete', 'house'] as const;
 
 export type IconName = (typeof iconNames)[number];
 ```
@@ -66,6 +68,54 @@ You can then trigger the generator by running `npx ts-node scripts/generateIconT
   }
 }
 ```
+
+### Example using snippet syntax
+
+The generator also supports an optional syntax that VS Code users might be familiar with. Instead of using template literals, you can create an array of strings similar to how code snippets is written for VS Code. Each string in the array represents a single line in the generated code:
+
+```ts
+// ./scripts/generateIconTypes.ts
+import { generate } from '@socio-development/generator';
+
+// Crawls a directory and extracts all icon names
+function crawlIconAssetsAndExtractNames(): string[] {
+  // your code here
+}
+
+const iconNames = crawlIconAssetsAndExtractNames(); // ['add', 'delete', 'house']
+
+// Create a template literal to be generated as code
+const codeToGenerate = [
+"export const iconNames = ['${ iconNames.join("', '") }'] as const;",
+"",
+"export type IconName = (typeof iconNames)[number];",
+"",
+"export type ComponentProps = {",
+"\ticon: IconName;",
+"}",
+]
+
+generate({
+  code: codeToGenerate, // The code you wish to generate
+  file: 'icons.ts', // The file to be generated
+  path: 'src/types' // Where to put the generated file
+});
+```
+
+This script will generate a file `./src/types/_generated/icons.ts` containing the provided code:
+
+```ts
+// ./src/types/_generated/icons.ts
+export const iconNames = ['add', 'delete', 'house'] as const;
+
+export type IconName = (typeof iconNames)[number];
+
+export type ComponentProps = {
+  icon: IconName;
+}
+```
+
+The snippet syntax makes it easier to handle indenting of the generated code.
 
 # Configuration options
 
