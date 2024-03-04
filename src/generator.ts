@@ -2,12 +2,12 @@ import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { mergeConfig } from './config'
 import { loadConfig } from './loaders'
-import { Logger } from './logger'
+import logger from './log'
 import { Config, GeneratorOptions, PathPreparationResult } from './types'
 import { pathEndsWithDir, pathExists } from './utils'
 
 export function generate(options: GeneratorOptions): void {
-  Logger.startProcess(`START`)
+  logger.group('Starting generator...')
 
   const config = mergeConfig(loadConfig())
   const pathStatus = preparePath(config, options.path)
@@ -16,41 +16,45 @@ export function generate(options: GeneratorOptions): void {
     if (config.createDir) {
       generateDirPaths(config, pathStatus.missingPaths)
     } else {
-      throw new Error(
-        `[generator] Missing paths: "${
-          pathStatus.missingPaths[pathStatus.missingPaths.length - 1]
-        }". Having createDir set to false will cause an error if the path does not exist.`,
-      )
+      const msg = `Missing paths: "${
+        pathStatus.missingPaths[pathStatus.missingPaths.length - 1]
+      }". Having createDir set to false will cause an error if the path does not exist.`
+
+      logger.error(msg)
+
+      throw new Error(msg)
     }
   } else {
-    Logger.add(`No missing paths`)
+    logger.info('No missing paths')
   }
 
   const filePath = join(pathStatus.finalDirPath, options.file)
   if (!existsSync(pathStatus.finalDirPath)) {
-    throw new Error(
-      `[generator] Path does not exist: ${pathStatus.finalDirPath}. This is most likely caused by a bug in the generator.`,
-    )
+    const msg = `Path does not exist: ${pathStatus.finalDirPath}. This is most likely caused by a bug in the generator.`
+
+    logger.error(msg)
+
+    throw new Error(msg)
   }
 
   // prepare code
   const preparedCode = prepareCode(options.code)
 
-  Logger.add(`Generating file: ${filePath}`)
-  Logger.add(`Writing code...`)
+  logger.add(`Generating file: ${filePath}`)
+  logger.add(`Writing code...`)
   writeFileSync(filePath, preparedCode, 'utf8')
 
-  Logger.endProcess(`DONE`)
-  Logger.print()
+  logger.groupEnd('DONE')
+  logger.print()
 }
 
 export function generateDirPaths(config: Config, paths: string[]): void {
-  Logger.startProcess(`Generating directory paths...`)
+  logger.group(`Generating directory paths...`)
 
   if (!config.createDir) {
-    throw new Error(
-      `[generator] Cannot generate directory path if createDir is false.`,
-    )
+    const msg = 'Cannot generate directory path if createDir is false.'
+    logger.error(msg)
+    throw new Error(msg)
   }
 
   // sort paths by length from shortest to longest
@@ -59,16 +63,16 @@ export function generateDirPaths(config: Config, paths: string[]): void {
   paths.forEach((path) => {
     // check if path exists
     if (existsSync(path)) {
-      throw new Error(
-        `[generator] Cannot generate directory path if it already exists. This is most likely caused by a bug in the generator.`,
-      )
+      const msg = `Cannot generate directory path if it already exists. This is most likely caused by a bug in the generator.`
+      logger.error(msg)
+      throw new Error(msg)
     }
 
-    Logger.add(`Creating directory path: ${path}`)
+    logger.add(`Creating directory path: ${path}`)
     mkdirSync(path)
   })
 
-  Logger.endProcess(`Directory path generated`)
+  logger.groupEnd(`Directory path generated`)
 }
 
 /**
@@ -77,21 +81,21 @@ export function generateDirPaths(config: Config, paths: string[]): void {
  * @returns The prepared code.
  */
 export function prepareCode(data: string): string {
-  Logger.startProcess(`Preparing code...`)
+  logger.group(`Preparing code...`)
 
   let res = data
 
   // remove newlines from the beginning and end of the code
   if (res.startsWith('\n')) {
-    Logger.add(`Removing newline from the beginning of the code`)
+    logger.add(`Removing newline from the beginning of the code`)
     res = res.slice(1)
   }
   if (res.endsWith('\n')) {
-    Logger.add(`Removing newline from the end of the code`)
+    logger.add(`Removing newline from the end of the code`)
     res = res.slice(0, -1)
   }
 
-  Logger.endProcess(`Preparing code: DONE`)
+  logger.groupEnd(`Preparing code: DONE`)
   return res
 }
 
@@ -105,7 +109,7 @@ export function preparePath(
   config: Config,
   path: string,
 ): PathPreparationResult {
-  Logger.startProcess(`[generator] Preparing path: ${path}`)
+  logger.group(`Preparing path: ${path}`)
 
   const res: PathPreparationResult = {
     finalDirPath: '',
@@ -123,11 +127,11 @@ export function preparePath(
   // remove file from the end of array if it exists
   if (!pathEndsWithDir(config, relativePath)) {
     const removedFile = arrPath.pop()
-    Logger.add(`Removed file from path: ${removedFile}`)
+    logger.warn(`Removed file from path: ${removedFile}`)
   }
 
   if (config.safeMode) {
-    Logger.add(`Safe mode enabled. Adding safety directory to path`)
+    logger.add(`Safe mode enabled. Adding safety directory to path`)
     // add safety directory to the end of array
     arrPath.push(config.safetyDirName)
   }
@@ -137,14 +141,14 @@ export function preparePath(
   // check if the path exists
   while (arrPath.length > 0) {
     const currentPath = join(rootPath, ...arrPath)
-    Logger.add(`Checking path: ${join(...arrPath)}`)
+    logger.add(`Checking path: ${join(...arrPath)}`)
     if (!pathExists(currentPath)) {
-      Logger.add(`Flagging missing path: ${join(...arrPath)}`)
+      logger.add(`Flagging missing path: ${join(...arrPath)}`)
       res.missingPaths.push(join(...arrPath))
     }
     arrPath.pop()
   }
 
-  Logger.endProcess(`[generator] Path prepared`)
+  logger.groupEnd(`Path prepared`)
   return res
 }

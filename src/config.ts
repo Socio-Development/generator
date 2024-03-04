@@ -1,4 +1,5 @@
 import { defaultConfig } from './constants'
+import logger from './log'
 import { Config, UserConfig } from './types'
 import { isObject } from './utils'
 
@@ -93,9 +94,10 @@ export function mergeConfig(userConfig: UserConfig): Config {
 export function validateUserConfig(value: unknown): UserConfig {
   // check if the user config is an object
   if (!isObject(value)) {
-    throw new Error(
-      '[generator] User config must be an object. Make sure you are using `defineConfig()` to define your config.',
-    )
+    const msg =
+      'User config must be an object. Make sure you are using `defineConfig()` to define your config.'
+    logger.error(msg)
+    throw new Error(msg)
   }
 
   const keysInUserConfig = Object.keys(value)
@@ -109,7 +111,9 @@ export function validateUserConfig(value: unknown): UserConfig {
 
   // check if user config has too many keys
   if (keysInUserConfig.length > keysInDefaultConfig.length) {
-    throw new Error('[generator] User config has too many properties.')
+    const msg = 'User config has too many properties.'
+    logger.error(msg)
+    throw new Error(msg)
   }
 
   // check if user config has invalid keys
@@ -117,20 +121,18 @@ export function validateUserConfig(value: unknown): UserConfig {
     (key) => !keysInDefaultConfig.includes(key),
   )
   if (invalidKeys.length > 0) {
-    throw new Error(
-      `[generator] User config has invalid properties: ${invalidKeys.join(
-        ', ',
-      )}.`,
-    )
+    const msg = `User config has invalid properties: ${invalidKeys.join(', ')}.`
+    logger.error(msg)
+    throw new Error(msg)
   }
 
   // validate .createDir
   if (value.createDir) {
     // check if .createDir is a boolean
     if (typeof value.createDir !== 'boolean') {
-      throw new Error(
-        '[generator] User config property `createDir` must be a boolean.',
-      )
+      const msg = 'User config property `createDir` must be a boolean.'
+      logger.error(msg)
+      throw new Error(msg)
     }
   }
 
@@ -138,24 +140,26 @@ export function validateUserConfig(value: unknown): UserConfig {
   if (value.dotPrefixWhitelist) {
     // check if .dotPrefixWhitelist is an object
     if (!isObject(value.dotPrefixWhitelist)) {
-      throw new Error(
-        '[generator] User config property `dotPrefixWhitelist` must be an object.',
-      )
+      const msg = 'User config property `dotPrefixWhitelist` must be an object.'
+      logger.error(msg)
+      throw new Error(msg)
     }
     // validate .dotPrefixWhitelist.dirs
     if (value.dotPrefixWhitelist.dirs) {
       // check if .dotPrefixWhitelist.dirs is an array
       if (!Array.isArray(value.dotPrefixWhitelist.dirs)) {
-        throw new Error(
-          '[generator] User config property `dotPrefixWhitelist.dirs` must be an array.',
-        )
+        const msg =
+          'User config property `dotPrefixWhitelist.dirs` must be an array.'
+        logger.error(msg)
+        throw new Error(msg)
       }
       // check if .dotPrefixWhitelist.dirs only contains strings
       value.dotPrefixWhitelist.dirs.forEach((dir) => {
         if (typeof dir !== 'string') {
-          throw new Error(
-            '[generator] User config property `dotPrefixWhitelist.dirs` must only contain strings.',
-          )
+          const msg =
+            'User config property `dotPrefixWhitelist.dirs` must only contain strings.'
+          logger.error(msg)
+          throw new Error(msg)
         }
       })
     }
@@ -163,16 +167,18 @@ export function validateUserConfig(value: unknown): UserConfig {
     if (value.dotPrefixWhitelist.files) {
       // check if .dotPrefixWhitelist.files is an array
       if (!Array.isArray(value.dotPrefixWhitelist.files)) {
-        throw new Error(
-          '[generator] User config property `dotPrefixWhitelist.files` must be an array.',
-        )
+        const msg =
+          'User config property `dotPrefixWhitelist.files` must be an array.'
+        logger.error(msg)
+        throw new Error(msg)
       }
       // check if .dotPrefixWhitelist.files only contains strings
       value.dotPrefixWhitelist.files.forEach((file) => {
         if (typeof file !== 'string') {
-          throw new Error(
-            '[generator] User config property `dotPrefixWhitelist.files` must only contain strings.',
-          )
+          const msg =
+            'User config property `dotPrefixWhitelist.files` must only contain strings.'
+          logger.error(msg)
+          throw new Error(msg)
         }
       })
     }
@@ -182,9 +188,9 @@ export function validateUserConfig(value: unknown): UserConfig {
   if (value.safeMode) {
     // check if .safeMode is a boolean
     if (typeof value.safeMode !== 'boolean') {
-      throw new Error(
-        '[generator] User config property `safeMode` must be a boolean.',
-      )
+      const msg = 'User config property `safeMode` must be a boolean.'
+      logger.error(msg)
+      throw new Error(msg)
     }
   }
 
@@ -192,9 +198,9 @@ export function validateUserConfig(value: unknown): UserConfig {
   if (value.safetyDirName) {
     // check if .safetyDirName is a string
     if (typeof value.safetyDirName !== 'string') {
-      throw new Error(
-        '[generator] User config property `safetyDirName` must be a string.',
-      )
+      const msg = 'User config property `safetyDirName` must be a string.'
+      logger.error(msg)
+      throw new Error(msg)
     }
   }
 
