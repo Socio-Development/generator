@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import { userConfigPath } from '../constants'
 import { loadConfig } from '../loaders'
 import { Logger } from '../logger'

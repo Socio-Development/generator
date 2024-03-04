@@ -1,5 +1,5 @@
-import { existsSync, statSync } from 'fs'
-import { ParsedPath, parse } from 'path'
+import { existsSync, statSync } from 'node:fs'
+import { ParsedPath, parse } from 'node:path'
 import { validateUserConfig } from './config'
 import { Config, ConfigOrigin } from './types'
 

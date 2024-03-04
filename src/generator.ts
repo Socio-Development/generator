@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
-import { join, resolve } from 'path'
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
 import { mergeConfig } from './config'
 import { loadConfig } from './loaders'
 import { Logger } from './logger'
