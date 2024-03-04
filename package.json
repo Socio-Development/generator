@@ -4,7 +4,7 @@
   "description": "A code generator that provides a reliable way of creating files in your project. Excellent for generating type definitions.",
   "author": "CasperSocio (https://github.com/CasperSocio)",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "dev": "ts-node src/sandbox/main.ts",
     "prepare": "husky",
     "test": "jest",
