@@ -1,4 +1,4 @@
-import { existsSync } from 'fs'
+import { existsSync } from 'node:fs'
 import { validateUserConfig } from './config'
 import { userConfigName, userConfigPath } from './constants'
 import { Logger } from './logger'
