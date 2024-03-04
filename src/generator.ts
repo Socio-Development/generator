@@ -6,6 +6,10 @@ import logger from './log'
 import { Config, GeneratorOptions, PathPreparationResult } from './types'
 import { pathEndsWithDir, pathExists } from './utils'
 
+/**
+ * Generates a file with the provided options.
+ * @param options The generator options.
+ */
 export function generate(options: GeneratorOptions): void {
   logger.group('Starting generator...')
 
@@ -80,10 +84,23 @@ export function generateDirPaths(config: Config, paths: string[]): void {
  * @param data The code to prepare.
  * @returns The prepared code.
  */
-export function prepareCode(data: string): string {
+export function prepareCode(data: string | string[]): string {
   logger.group(`Preparing code...`)
 
   let res = data
+
+  // if the data is an array, join it into a string
+  if (Array.isArray(data)) {
+    logger.add(`Joining code array into a string`)
+    res = data.join('\n')
+  }
+
+  // verify that the code is a string
+  if (typeof res !== 'string') {
+    const msg = `The code is not a string. This is most likely caused by a bug in the generator.`
+    logger.error(msg)
+    throw new Error(msg)
+  }
 
   // remove newlines from the beginning and end of the code
   if (res.startsWith('\n')) {

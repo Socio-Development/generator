@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import { mergeConfig } from '../config'
-import { prepareCode, preparePath } from '../generator'
+import { generate, prepareCode, preparePath } from '../generator'
 import { Config, UserConfig } from '../types'
 
 const codeInput = `
@@ -11,6 +11,39 @@ const codeInputNewline = `
 const greeting = 'Hello World!'
 
 `
+
+describe('generate', () => {
+  it('generates a file with the provided options', () => {
+    jest.spyOn(fs, 'existsSync').mockReturnValue(true)
+    const writeFile = jest
+      .spyOn(fs, 'writeFileSync')
+      .mockImplementation(() => {})
+
+    const options = {
+      code: codeInput,
+      file: 'greeting.ts',
+      path: 'src/types',
+    }
+
+    const actual = generate(options)
+
+    expect(actual).toBe(undefined)
+    expect(writeFile).toHaveBeenCalled()
+  })
+  it('throws an error if the path does not exist and createDir is false', () => {
+    jest.spyOn(fs, 'existsSync').mockReturnValue(false)
+
+    const options = {
+      code: codeInput,
+      file: 'greeting.ts',
+      path: 'src/types',
+    }
+
+    const actual = () => generate(options)
+
+    expect(actual).toThrow()
+  })
+})
 
 describe('prepareCode', () => {
   it('should trim the input string and return it', () => {
@@ -34,6 +67,28 @@ describe('prepareCode', () => {
 
     expect(actualBefore).toBe(expectedBefore)
     expect(actualAfter).toBe(expectedAfter)
+  })
+  it('should convert array input to string', () => {
+    const expected = JSON.stringify(
+      "import { join } from 'path'\n\nexport const rootPath = join(__dirname, '..')",
+    )
+    const actual = JSON.stringify(
+      prepareCode([
+        "import { join } from 'path'",
+        '',
+        "export const rootPath = join(__dirname, '..')",
+        '',
+      ]),
+    )
+
+    expect(actual).toBe(expected)
+  })
+  it('should throw an error if the input is not a string or array', () => {
+    const expected =
+      'The code is not a string. This is most likely caused by a bug in the generator.'
+    const actual = () => prepareCode(123 as any)
+
+    expect(actual).toThrow(expected)
   })
 })
 

@@ -13,7 +13,7 @@ export type GeneratorOptions = {
    * The code to put in the generated file.
    * @example 'export const icons = { ... }'
    */
-  code: string
+  code: string | string[]
   /**
    * The file to generate.
    * @example 'icons.ts'
