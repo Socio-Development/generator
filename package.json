@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/sandbox/main.ts",
-    "prepare": "husky install",
+    "prepare": "husky",
     "test": "jest",
     "test:ci": "jest --ci --coverage=false",
     "test:watch": "jest --watch"
